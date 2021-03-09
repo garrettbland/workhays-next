@@ -1,17 +1,14 @@
 import Layout from '../components/layout'
 import Section from '../components/section'
 
-const Employers = () => {
+const SignIn = () => {
     return (
         <Layout>
             <Section>
-                <div>Employers</div>
-            </Section>
-            <Section>
-                <div>Employers & stuff</div>
+                <div>SignIn</div>
             </Section>
         </Layout>
     )
 }
 
-export default Employers
+export default SignIn

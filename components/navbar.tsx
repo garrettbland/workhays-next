@@ -9,6 +9,10 @@ const DESKTOP_LINKS = [
         title: 'For Employers',
         link: '/employers',
     },
+    {
+        title: 'Sign In',
+        link: '/signin',
+    },
 ]
 
 const Navbar = () => {
