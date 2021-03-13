@@ -1,22 +1,22 @@
 import Link from 'next/link'
 
-type FooterLinkType = {
+type LinkType = {
     title: string
     link: string
 }
 
-const EMPLOYER_LINKS: FooterLinkType[] = [
+const EMPLOYER_LINKS: LinkType[] = [
     {
         title: 'Post a job',
-        link: '/signup',
+        link: '/register',
     },
     {
-        title: 'Sign Up',
-        link: '/sign-up',
+        title: 'Register',
+        link: '/register',
     },
     {
-        title: 'Sign In',
-        link: '/sign-in',
+        title: 'Login',
+        link: '/login',
     },
     {
         title: 'Help',
@@ -24,22 +24,22 @@ const EMPLOYER_LINKS: FooterLinkType[] = [
     },
 ]
 
-const LINKS: FooterLinkType[] = [
+const LINKS: LinkType[] = [
     {
         title: 'Contact',
-        link: '/signup',
+        link: '/contact',
     },
     {
         title: 'About',
-        link: '/sign-up',
+        link: '/about',
     },
     {
         title: 'Privacy',
-        link: '/sign-in',
+        link: '/privacy',
     },
     {
         title: 'Terms',
-        link: '/help',
+        link: '/terms',
     },
 ]
 
@@ -95,8 +95,12 @@ const Footer = () => {
                         © {new Date().getFullYear()} Work Hays. All rights reserved.
                     </div>
                     <div className="flex flex-row items-center space-x-2">
-                        <Link href="#">
-                            <a className="text-gray-400 hover:text-gray-500">
+                        <Link href="https://github.com/garrettbland/workhays-next">
+                            <a
+                                className="text-gray-400 hover:text-gray-500"
+                                target="_blank"
+                                rel="noopener"
+                            >
                                 <span className="sr-only">GitHub</span>
                                 <svg
                                     className="h-6 w-6"
@@ -112,8 +116,12 @@ const Footer = () => {
                                 </svg>
                             </a>
                         </Link>
-                        <Link href="#">
-                            <a className="text-gray-400 hover:text-gray-500">
+                        <Link href="https://www.facebook.com/workhays">
+                            <a
+                                target="_blank"
+                                rel="noopener"
+                                className="text-gray-400 hover:text-gray-500"
+                            >
                                 <span className="sr-only">Facebook</span>
                                 <svg
                                     className="h-6 w-6"

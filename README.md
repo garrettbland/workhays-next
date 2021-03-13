@@ -16,7 +16,7 @@ Follow this guide to get started developing & contributing. Pull requests welcom
 
 3.  📦 Install dependencies `npm install`
 
-4.  🌎 Start up local development server `npm run dev`
+4.  🌎 Start up local development server `npm run dev` on `http://localhost:3000`
 
 ## Technical Overview
 
