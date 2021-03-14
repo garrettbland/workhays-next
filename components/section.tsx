@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-const DEFAULT_CLASSES = 'max-w-4xl mx-auto p-4'
+const DEFAULT_CLASSES = 'max-w-5xl mx-auto p-4'
 
 type SectionProps = {
     children?: ReactNode

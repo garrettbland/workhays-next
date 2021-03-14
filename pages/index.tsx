@@ -13,9 +13,9 @@ const Home = () => {
                 />
             </Section>
             <Section>
-                <div className="flex flex-col-reverse md:grid md:grid-cols-8 gap-4">
-                    <div className="col-span-5 pt-4 md:pt-0">
-                        <h2 className="text-xl font-semibold mb-4 text-blueGray-800">
+                <div className="flex flex-col-reverse md:grid md:grid-cols-3 gap-4">
+                    <div className="col-span-2 pt-4 md:pt-0">
+                        <h2 className="text-xl font-semibold my-4 md:mb-4 md:my-0 text-blueGray-800">
                             Latest Job Openings
                         </h2>
                         <div className="border border-gray-200 rounded divide-y divide-gray-200">
@@ -33,7 +33,7 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-span-3">
+                    <div className="col-span-1">
                         <div className="bg-gray-200 rounded px-2 py-1 md:p-4">
                             <h3 className="text-base font-semibold">Are you an employer?</h3>
                             <p className="text-base antialiased">

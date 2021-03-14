@@ -46,7 +46,7 @@ const LINKS: LinkType[] = [
 const Footer = () => {
     return (
         <div className="border-t border-gray-200 overflow-hidden">
-            <div className="max-w-4xl mx-auto px-4 py-10">
+            <div className="max-w-5xl mx-auto px-4 py-10">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-4">
                     <div>
                         <Link href="/">
