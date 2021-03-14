@@ -34,7 +34,7 @@ const DesktopNav = () => {
     return (
         <div className="hidden md:grid grid-flow-col grid-col-4 gap-2">
             {DESKTOP_LINKS.map(({ title, link }, index) => (
-                <Link href={link}>
+                <Link href={link} key={index}>
                     <a className="relative group">
                         <div className="p-4">{title}</div>
                         <div
