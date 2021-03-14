@@ -35,7 +35,7 @@ const MobileNav = () => {
     return (
         <>
             {isOpen && (
-                <div className="fixed top-0 left-0 w-screen h-screen bg-white border-t border-gray-200 mt-14">
+                <div className="fixed top-0 left-0 md:hidden w-screen h-screen bg-white border-t border-gray-200 mt-14">
                     <div className="p-4">
                         <ol className="text-center space-y-4 text-xl font-semibold">
                             {MOBILE_LINKS.map(({ title, link }, index) => (
