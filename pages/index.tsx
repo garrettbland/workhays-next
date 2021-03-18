@@ -25,11 +25,16 @@ const Home = () => {
                                 </div>
                                 <div className="text-lg font-semibold">Retail Sales Associate</div>
                             </div>
-                            <div className="px-4 py-3">
-                                <div className="text-sm leading-tight">
-                                    Heartland Building Center
+                            <div className="px-4 py-3 flex justiy-between items-center">
+                                <div className="w-2/3">
+                                    <div className="text-lg font-semibold">
+                                        Retail Sales Associate
+                                    </div>
+                                    <div className="text-sm leading-tight">
+                                        Heartland Building Center
+                                    </div>
                                 </div>
-                                <div className="text-lg font-semibold">Retail Sales Associate</div>
+                                <div className="flex flex-1 justify-end">Star</div>
                             </div>
                         </div>
                     </div>
