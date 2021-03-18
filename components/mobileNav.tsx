@@ -1,35 +1,10 @@
 import { useState } from 'react'
 import Link from 'next/link'
-
-type LinkType = {
-    title: string
-    link: string
-}
-
-const MOBILE_LINKS: LinkType[] = [
-    {
-        title: 'Jobs',
-        link: '/',
-    },
-    {
-        title: 'For Employers',
-        link: '/employers',
-    },
-    {
-        title: 'Login',
-        link: '/login',
-    },
-    {
-        title: 'Register',
-        link: '/register',
-    },
-    {
-        title: 'Contact Us',
-        link: '/contact',
-    },
-]
+import { useRouter } from 'next/router'
+import { MOBILE_LINKS } from '../config'
 
 const MobileNav = () => {
+    const { pathname } = useRouter()
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
     return (
@@ -38,9 +13,17 @@ const MobileNav = () => {
                 <div className="fixed top-0 left-0 md:hidden w-screen h-screen bg-white border-t border-gray-200 mt-14">
                     <div className="p-4">
                         <ol className="text-center space-y-4 text-xl font-semibold">
-                            {MOBILE_LINKS.map(({ title, link }, index) => (
-                                <Link href={link} key={index}>
-                                    <a className="block">{title}</a>
+                            {MOBILE_LINKS.map(({ title, href, target = '_self' }, index) => (
+                                <Link href={href} key={index}>
+                                    <a
+                                        className={`block ${
+                                            pathname === href ? 'text-blue-500' : 'text-gray-800'
+                                        }`}
+                                        target={target}
+                                        rel={target !== '_self' ? 'noopener' : ''}
+                                    >
+                                        {title}
+                                    </a>
                                 </Link>
                             ))}
                         </ol>
