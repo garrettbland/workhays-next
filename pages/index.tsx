@@ -2,6 +2,7 @@ import Layout from '../components/layout'
 import Section from '../components/section'
 import PageHeader from '../components/pageHeader'
 import Link from 'next/link'
+import { testJobs } from '../utils/test.data'
 
 const Home = () => {
     return (
@@ -19,36 +20,43 @@ const Home = () => {
                             Latest Job Openings
                         </h2>
                         <div className="border border-gray-200 rounded divide-y divide-gray-200">
-                            <div className="px-4 py-3">
-                                <div className="text-sm leading-tight">
-                                    Heartland Building Center
-                                </div>
-                                <div className="text-lg font-semibold">Retail Sales Associate</div>
-                            </div>
-                            <div className="px-4 py-3 flex justiy-between items-center">
-                                <div className="w-2/3">
-                                    <div className="text-lg font-semibold">
-                                        Retail Sales Associate
+                            {testJobs.map((job, index) => (
+                                <div className="p-2 flex justiy-between items-center">
+                                    <div className="w-2/3">
+                                        <div className="text-lg font-semibold">{job.title}</div>
+                                        <div className="text-sm leading-tight">
+                                            {job.employer_title}
+                                        </div>
                                     </div>
-                                    <div className="text-sm leading-tight">
-                                        Heartland Building Center
-                                    </div>
+                                    <div className="flex flex-1 justify-end">View Job</div>
                                 </div>
-                                <div className="flex flex-1 justify-end">Star</div>
-                            </div>
+                            ))}
                         </div>
                     </div>
-                    <div className="col-span-1">
-                        <div className="bg-gray-200 rounded px-2 py-1 md:p-4">
-                            <h3 className="text-base font-semibold">Are you an employer?</h3>
-                            <p className="text-base antialiased">
-                                <Link href="/register">
-                                    <a className="text-gray-600 hover:text-gray-900 hover:underline">
-                                        Click here
-                                    </a>
-                                </Link>{' '}
-                                to register today & post your openings for free.
+                    <div className="col-span-1 grid grid-flow-row gap-4">
+                        <div className="border border-gray-200 rounded">
+                            <h3 className="text-base font-semibold border-b p-2">
+                                Are you an employer?
+                            </h3>
+                            <p className="text-base antialiased p-2">
+                                <Link href="/register">Click here</Link> to register today & post
+                                your openings for free.
                             </p>
+                        </div>
+                        <div className="border border-gray-200 rounded">
+                            <h3 className="text-base font-semibold border-b p-2">Get Notified</h3>
+                            <p className="text-base antialiased p-2">
+                                Sign up below for weekly email notifications of new job postings.
+                            </p>
+                            <div className="p-2 space-y-2">
+                                <input
+                                    className="border border-gray-200 rounded w-full p-2 hover:border-gray-400 focus:outline-none focus:border-blue-500"
+                                    placeholder="Email Address"
+                                />
+                                <button className="rounded bg-blue-500 text-blue-50 p-2 w-full hover:bg-blue-600">
+                                    Sign Up
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

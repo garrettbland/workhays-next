@@ -27,6 +27,7 @@ export type User = {
 export type Job = {
     id: string
     employer_id: string
+    employer_title: string
     title: string
     type: 'full_time' | 'part_time'
     description: string

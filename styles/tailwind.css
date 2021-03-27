@@ -3,3 +3,6 @@
 @tailwind utilities;
 
 /* Custom Styles Go Below*/
+p > a {
+    @apply text-blue-700 underline hover:text-blue-800;
+}
