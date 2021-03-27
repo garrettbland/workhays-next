@@ -34,6 +34,7 @@ export type Job = {
     industry: string
     application_link?: string
     status: 'active' | 'inactive' | 'archived'
+    promoted: boolean
 }
 
 export type Employer = {

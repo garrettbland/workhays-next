@@ -50,9 +50,16 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-4">
                     <div>
                         <Link href="/">
-                            <a className="text-lg font-bold text-gray-700 hover:text-gray-900 hover:underline inline-block">
-                                Work Hays
-                            </a>
+                            <div className="flex flex-row items-center space-x-2">
+                                <img
+                                    src="/work-hays-logo.svg"
+                                    alt="Work Hays Logo"
+                                    className="w-10 h-10"
+                                />
+                                <a className="text-lg font-bold text-gray-700 hover:text-gray-900 hover:underline inline-block">
+                                    Work Hays
+                                </a>
+                            </div>
                         </Link>
                     </div>
                     <div>
