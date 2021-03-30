@@ -1,45 +1,41 @@
 import Link from 'next/link'
-
-type LinkType = {
-    title: string
-    link: string
-}
+import { LinkType } from '../utils/types'
 
 const EMPLOYER_LINKS: LinkType[] = [
     {
         title: 'Post a job',
-        link: '/register',
+        href: '/register',
     },
     {
         title: 'Register',
-        link: '/register',
+        href: '/register',
     },
     {
         title: 'Login',
-        link: '/login',
+        href: '/login',
     },
     {
         title: 'Help',
-        link: '/help',
+        href: '/help',
     },
 ]
 
 const LINKS: LinkType[] = [
     {
         title: 'Contact',
-        link: '/contact',
+        href: '/contact',
     },
     {
         title: 'About',
-        link: '/about',
+        href: '/about',
     },
     {
         title: 'Privacy',
-        link: '/privacy',
+        href: '/privacy',
     },
     {
         title: 'Terms',
-        link: '/terms',
+        href: '/terms',
     },
 ]
 
@@ -67,10 +63,10 @@ const Footer = () => {
                             For Employers
                         </div>
                         <ul className="mt-4 space-y-2">
-                            {EMPLOYER_LINKS.map(({ title, link }, index) => (
+                            {EMPLOYER_LINKS.map(({ title, href }, index) => (
                                 <li key={index}>
                                     <a
-                                        href={link}
+                                        href={href}
                                         className="text-base text-gray-600 hover:text-gray-900 hover:underline"
                                     >
                                         {title}
@@ -84,10 +80,10 @@ const Footer = () => {
                             Links
                         </div>
                         <ul className="mt-4 space-y-2">
-                            {LINKS.map(({ title, link }, index) => (
+                            {LINKS.map(({ title, href }, index) => (
                                 <li key={index}>
                                     <a
-                                        href={link}
+                                        href={href}
                                         className="text-base text-gray-600 hover:text-gray-900 hover:underline"
                                     >
                                         {title}

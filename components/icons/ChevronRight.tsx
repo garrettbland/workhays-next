@@ -1,4 +1,4 @@
-type PropTypes = {
+interface PropTypes {
     className?: string
 }
 

@@ -1,11 +1,7 @@
 import ChevronRight from './icons/ChevronRight'
 import { Job } from '../utils/types'
 
-type Props = {
-    job: Job
-}
-
-const JobItem = ({ job }: Props) => (
+const JobItem = ({ job }: { job: Job }) => (
     <div className="p-2 flex justiy-between items-center group hover:cursor-pointer bg-white">
         <div className="flex flex-1 flex-col relative whitespace-nowrap overflow-x-hidden">
             <div className="text-lg font-semibold group-hover:text-blue-600 z-10">{job.title}</div>

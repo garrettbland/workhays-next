@@ -1,4 +1,4 @@
-export type LinkType = {
+export interface LinkType {
     title: string
     href: string
     target?: string
@@ -9,13 +9,13 @@ export type LinkType = {
  * alerts for when specific industries added new job
  * listings.
  */
-export type Subscriber = {
+export interface Subscriber {
     id: string
     email: string
     industry: string | null
 }
 
-export type User = {
+export interface User {
     id: string
     first_name: string
     last_name: string
@@ -24,7 +24,7 @@ export type User = {
     role: 'user' | 'administrator'
 }
 
-export type Job = {
+export interface Job {
     id: string
     employer_id: string
     employer_title: string
@@ -37,7 +37,7 @@ export type Job = {
     promoted: boolean
 }
 
-export type Employer = {
+export interface Employer {
     id: string
     owner_user_id: string
     users: {

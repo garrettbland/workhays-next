@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 
 const DEFAULT_CLASSES = 'max-w-5xl mx-auto p-4'
 
-type SectionProps = {
+interface SectionProps {
     children?: ReactNode
     className?: string
 }
