@@ -21,7 +21,7 @@ const Home = () => {
                             <h2 className="text-xl font-semibold mb-3 text-blueGray-800">
                                 Promoted Job Openings
                             </h2>
-                            <div className="border border-gray-200 rounded divide-y divide-gray-200">
+                            <div className="border border-gray-200 rounded divide-y divide-gray-200 overflow-hidden shadow-sm">
                                 {testJobs.map((job, index) => {
                                     if (job.promoted) {
                                         return <JobItem key={index} job={job} />
@@ -33,7 +33,7 @@ const Home = () => {
                             <h2 className="text-xl font-semibold mb-3 text-blueGray-800">
                                 Latest Job Openings
                             </h2>
-                            <div className="border border-gray-200 rounded divide-y divide-gray-200">
+                            <div className="border border-gray-200 rounded divide-y divide-gray-200 overflow-hidden shadow-sm">
                                 {testJobs.map((job, index) => (
                                     <JobItem key={index} job={job} />
                                 ))}
@@ -42,7 +42,7 @@ const Home = () => {
                     </div>
                     <div className="col-span-2 md:col-span-1 pt-8 md:pt-0">
                         <div className="grid grid-flow-row gap-4">
-                            <div className="border border-gray-200 rounded">
+                            <div className="border border-gray-200 rounded bg-white shadow-sm">
                                 <h3 className="text-base font-semibold border-b p-2">
                                     Are you an employer?
                                 </h3>
@@ -51,7 +51,7 @@ const Home = () => {
                                     post your openings for free.
                                 </p>
                             </div>
-                            <div className="border border-gray-200 rounded">
+                            <div className="border border-gray-200 rounded bg-white shadow-sm">
                                 <h3 className="text-base font-semibold border-b p-2">
                                     Get Notified
                                 </h3>

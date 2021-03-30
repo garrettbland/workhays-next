@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import Navbar from './navbar'
 import Footer from './footer'
 
-type LayoutProps = {
+interface LayoutProps {
     children?: ReactNode
 }
 
@@ -10,7 +10,7 @@ const Layout = ({ children }: LayoutProps) => {
     return (
         <div className="relative">
             <Navbar />
-            <div className="pb-24">{children}</div>
+            <div className="relative pb-24 bg-blueGray-50">{children}</div>
             <Footer />
         </div>
     )
