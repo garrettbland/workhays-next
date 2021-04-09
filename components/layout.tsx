@@ -10,7 +10,7 @@ const Layout = ({ children }: LayoutProps) => {
     return (
         <div className="relative">
             <Navbar />
-            <div className="relative pb-24 bg-blueGray-50">{children}</div>
+            <div className="relative py-24">{children}</div>
             <Footer />
         </div>
     )
