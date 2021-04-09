@@ -64,7 +64,7 @@ const Home = () => {
                                         className="border border-gray-200 rounded w-full p-2 hover:border-gray-400 focus:outline-none focus:border-blue-500"
                                         placeholder="Email Address"
                                     />
-                                    <button className="rounded bg-blue-500 text-blue-50 p-2 w-full hover:bg-blue-600">
+                                    <button className="rounded bg-blue-500 text-white p-2 w-full hover:bg-blue-600">
                                         Sign Up
                                     </button>
                                 </div>

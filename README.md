@@ -6,6 +6,10 @@
 
 Work Hays is a job postings website for the Hays, KS area and surrounding regions. This is a free website for employers to post their open positions & for potential employees to discover.
 
+## To Do's
+
+[] Need to figure out a better way to handle main content and aside stuff
+
 ## Getting Started
 
 Follow this guide to get started developing & contributing. Pull requests welcome.
