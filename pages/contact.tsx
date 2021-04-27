@@ -1,17 +1,14 @@
 import Layout from '../components/layout'
-import Section from '../components/section'
 import PageHeader from '../components/pageHeader'
 
 const Contact = () => {
     return (
         <Layout>
-            <Section>
-                <PageHeader
-                    title="Contact Us"
-                    description="Please fill out the following form to contact us. We will try to respond as soon as we can."
-                />
-            </Section>
-            <Section>
+            <PageHeader
+                title="Contact Us"
+                description="Please fill out the following form to contact us. We will try to respond as soon as we can."
+            />
+            <section>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 col-span-1 md:col-span-2 prose prose-md">
                         <div className="col-span-2 md:col-span-1">
@@ -52,7 +49,7 @@ const Contact = () => {
                         </div>
                     </div>
                 </div>
-            </Section>
+            </section>
         </Layout>
     )
 }

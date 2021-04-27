@@ -1,4 +1,4 @@
-import { LinkType } from './utils/types'
+import { LinkType } from './types'
 
 export const DESKTOP_LINKS: LinkType[] = [
     {
@@ -6,8 +6,12 @@ export const DESKTOP_LINKS: LinkType[] = [
         href: '/',
     },
     {
-        title: 'For Employers',
-        href: '/employers',
+        title: 'Contact',
+        href: '/contact',
+    },
+    {
+        title: 'Register',
+        href: '/register',
     },
     {
         title: 'Login',
@@ -21,8 +25,8 @@ export const MOBILE_LINKS: LinkType[] = [
         href: '/',
     },
     {
-        title: 'For Employers',
-        href: '/employers',
+        title: 'Contact Us',
+        href: '/contact',
     },
     {
         title: 'Login',
@@ -31,9 +35,5 @@ export const MOBILE_LINKS: LinkType[] = [
     {
         title: 'Register',
         href: '/register',
-    },
-    {
-        title: 'Contact Us',
-        href: '/contact',
     },
 ]

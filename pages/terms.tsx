@@ -1,14 +1,11 @@
 import Layout from '../components/layout'
-import Section from '../components/section'
 import PageHeader from '../components/pageHeader'
 
 const Terms = () => {
     return (
         <Layout>
-            <Section>
-                <PageHeader title="Terms of Service" />
-            </Section>
-            <Section>
+            <PageHeader title="Terms of Service" />
+            <section>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <article className="col-span-1 md:col-span-2 prose prose-md">
                         <h2>Agreement between user and Work Hays</h2>
@@ -294,7 +291,7 @@ const Terms = () => {
                         </p>
                     </article>
                 </div>
-            </Section>
+            </section>
         </Layout>
     )
 }

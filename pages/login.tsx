@@ -1,12 +1,11 @@
 import Layout from '../components/layout'
-import Section from '../components/section'
+import PageHeader from '../components/pageHeader'
 
 const SignIn = () => {
     return (
         <Layout>
-            <Section>
-                <div>SignIn</div>
-            </Section>
+            <PageHeader title="Privacy" />
+            <section>SignIn</section>
         </Layout>
     )
 }

@@ -1,16 +1,13 @@
 import Layout from '../components/layout'
-import Section from '../components/section'
 import PageHeader from '../components/pageHeader'
 
 const Employers = () => {
     return (
         <Layout>
-            <Section>
-                <PageHeader title="Employers" />
-            </Section>
-            <Section>
+            <PageHeader title="Employers" />
+            <section>
                 <div>Employers & stuff</div>
-            </Section>
+            </section>
         </Layout>
     )
 }

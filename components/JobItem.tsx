@@ -1,5 +1,5 @@
 import ChevronRight from './icons/ChevronRight'
-import { Job } from '../utils/types'
+import { Job } from '../types'
 
 const JobItem = ({ job }: { job: Job }) => (
     <div className="p-2 flex justiy-between items-center group hover:cursor-pointer bg-white">

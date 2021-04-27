@@ -10,7 +10,7 @@ const Layout = ({ children }: LayoutProps) => {
     return (
         <div className="relative">
             <Navbar />
-            <div className="relative py-24">{children}</div>
+            {children}
             <Footer />
         </div>
     )
