@@ -11,7 +11,7 @@ const Header = ({ title, description }: PropTypes) => {
     const speed = 3
 
     return (
-        <div className="relative -mt-20 overflow-hidden">
+        <div className="relative -mt-20 overflow-hidden z-10">
             <div
                 className="absolute top-0 left-0 bg-cover bg-center w-full h-full z-10"
                 style={{
