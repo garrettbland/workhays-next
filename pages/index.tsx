@@ -1,5 +1,5 @@
-import Layout from '../components/layout'
-import PageHeader from '../components/pageHeader'
+import Layout from '@/components/Layout'
+import Header from '@/components/Header'
 // import Link from 'next/link'
 // import { testJobs } from '../utils/test.data'
 // import JobItem from '../components/JobItem'
@@ -7,7 +7,7 @@ import PageHeader from '../components/pageHeader'
 const Home = () => {
     return (
         <Layout>
-            <PageHeader
+            <Header
                 title="Current Job Openings"
                 description="Browse current job openings in Hays, KS and surrounding communities."
             />

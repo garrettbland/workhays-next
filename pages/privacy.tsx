@@ -1,10 +1,10 @@
-import Layout from '../components/layout'
-import PageHeader from '../components/pageHeader'
+import Layout from '@/components/Layout'
+import Header from '@/components/Header'
 
 const Privacy = () => {
     return (
         <Layout>
-            <PageHeader title="Privacy" />
+            <Header title="Privacy" />
             <section>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <article className="col-span-1 md:col-span-2 prose prose-md">

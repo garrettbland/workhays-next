@@ -1,10 +1,10 @@
-import Layout from '../components/layout'
-import PageHeader from '../components/pageHeader'
+import Layout from '@/components/Layout'
+import Header from '@/components/Header'
 
 const Employers = () => {
     return (
         <Layout>
-            <PageHeader title="Employers" />
+            <Header title="Employers" />
             <section>
                 <div>Employers & stuff</div>
             </section>

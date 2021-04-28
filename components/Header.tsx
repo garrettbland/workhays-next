@@ -6,7 +6,7 @@ interface PropTypes {
     description?: string
 }
 
-const PageHeader = ({ title, description }: PropTypes) => {
+const Header = ({ title, description }: PropTypes) => {
     const offset = usePageOffset()
     const speed = 3
 
@@ -51,4 +51,4 @@ const PageHeader = ({ title, description }: PropTypes) => {
     )
 }
 
-export default PageHeader
+export default Header
