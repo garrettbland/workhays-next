@@ -1,8 +1,5 @@
 import Layout from '@/components/Layout'
 import Header from '@/components/Header'
-// import Link from 'next/link'
-// import { testJobs } from '../utils/test.data'
-// import JobItem from '../components/JobItem'
 
 const Home = () => {
     return (
