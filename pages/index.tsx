@@ -9,7 +9,7 @@ const Home = () => {
                 description="Browse current job openings in Hays, KS and surrounding communities."
             />
             <section>
-                <div className="max-w-4xl mx-auto">
+                <div>
                     <div className="h-[900px]">test</div>
                 </div>
             </section>

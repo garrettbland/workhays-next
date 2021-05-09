@@ -6,8 +6,8 @@ const Terms = () => {
         <Layout>
             <Header title="Terms of Service" />
             <section>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <article className="col-span-1 md:col-span-2 prose prose-md">
+                <div>
+                    <article>
                         <h2>Agreement between user and Work Hays</h2>
                         <p>
                             The Work Hays website is comprised of various Web pages operated by Work
@@ -220,7 +220,7 @@ const Terms = () => {
                             SITE.
                         </p>
                         <p>
-                            SERVICE CONTACT : Garrett Bland (
+                            SERVICE CONTACT : Garrett Bland & Lane Patterson (
                             <a href="mailto:support@workhays.com">support@workhays.com</a>)
                         </p>
                         <h2>Termination/Access restrictions</h2>

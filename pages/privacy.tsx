@@ -6,8 +6,8 @@ const Privacy = () => {
         <Layout>
             <Header title="Privacy" />
             <section>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <article className="col-span-1 md:col-span-2 prose prose-md">
+                <div>
+                    <article>
                         <p>
                             At Work Hays, accessible from https://workhays.com, one of our main
                             priorities is the privacy of our visitors. This Privacy Policy document

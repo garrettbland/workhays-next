@@ -6,9 +6,13 @@ const About = () => {
         <Layout>
             <Header
                 title="About Work Hays"
-                description="Learn more about Work Hays and the people helping people find work."
+                description="Learn more about Work Hays and the team helping people find work."
             />
-            <section>About us</section>
+            <section>
+                <div>
+                    <article>About Us coming soon</article>
+                </div>
+            </section>
         </Layout>
     )
 }

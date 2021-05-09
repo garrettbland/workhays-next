@@ -4,8 +4,8 @@ import Header from '@/components/Header'
 const SignIn = () => {
     return (
         <Layout>
-            <Header title="Privacy" />
-            <section>SignIn</section>
+            <Header title="Login" />
+            <section></section>
         </Layout>
     )
 }

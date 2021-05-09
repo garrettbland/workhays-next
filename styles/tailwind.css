@@ -3,3 +3,14 @@
 @tailwind utilities;
 
 /* Custom Styles Go Below*/
+section {
+    @apply py-24 bg-white;
+}
+
+section > div:first-of-type {
+    @apply max-w-4xl mx-auto px-4;
+}
+
+article {
+    @apply prose prose-blue;
+}

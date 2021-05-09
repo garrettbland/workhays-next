@@ -1,4 +1,4 @@
-import usePageOffset from '../utils/usePageOffset'
+import { usePageOffset } from 'use-page-offset'
 
 interface PropTypes {
     title: string
