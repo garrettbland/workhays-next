@@ -42,17 +42,17 @@ const LINKS: LinkType[] = [
 const Footer = () => {
     return (
         <div className="border-t border-gray-200 overflow-hidden">
-            <div className="max-w-4xl mx-auto px-4 py-10">
+            <div className="container mx-auto px-4 py-10">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-4">
                     <div>
                         <Link href="/">
-                            <div className="flex flex-row items-center space-x-2">
+                            <div className="flex flex-row items-center space-x-2 cursor-pointer group">
                                 <img
                                     src="/work-hays-logo.svg"
                                     alt="Work Hays Logo"
                                     className="w-10 h-10"
                                 />
-                                <a className="text-lg font-bold text-gray-700 hover:text-gray-900 hover:underline inline-block">
+                                <a className="text-lg font-bold text-gray-700 group-hover:text-gray-900 inline-block">
                                     Work Hays
                                 </a>
                             </div>

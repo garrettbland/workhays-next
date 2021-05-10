@@ -20,7 +20,7 @@ const Header = ({ title, description }: PropTypes) => {
                 }}
             />
             <div className="absolute top-0 left-0 z-20 w-full h-full bg-gradient-to-r from-purple-900" />
-            <div className="relative z-30 max-w-4xl mx-auto px-4 pt-32 pb-36 text-white">
+            <div className="relative z-30 max-w-3xl mx-auto px-4 pt-32 pb-36 text-white">
                 <h1 className="text-3xl md:text-4xl font-bold">{title}</h1>
                 <p className="text-base md:text-lg">{description}</p>
             </div>

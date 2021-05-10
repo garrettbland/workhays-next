@@ -8,7 +8,7 @@ section {
 }
 
 section > div:first-of-type {
-    @apply max-w-4xl mx-auto px-4;
+    @apply max-w-3xl mx-auto px-4;
 }
 
 article {
