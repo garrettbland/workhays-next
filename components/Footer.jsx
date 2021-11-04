@@ -23,8 +23,8 @@ const Footer = () => {
                 </div>
                 <div className="w-full md:w-2/3 text-gray-800">
                     <div className="grid grid-cols-1 md:grid-cols-2 grid-flow-row gap-4">
-                        {footer_links.map(({ title, href }) => (
-                            <div>
+                        {footer_links.map(({ title, href }, index) => (
+                            <div key={index}>
                                 <Link href={href} key={title}>
                                     <a className="inline-block hover:underline">{title}</a>
                                 </Link>
