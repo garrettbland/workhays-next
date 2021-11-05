@@ -1,4 +1,5 @@
 import Layout from '@/components/Layout'
+import Link from 'next/link'
 
 const NotFound = () => {
     return (
@@ -8,7 +9,10 @@ const NotFound = () => {
                 <p className="prose prose-lg prose-blue">
                     Uh Oh. Looks like this page cannot be found. If you are needing assistance,
                     please
-                    <a href="/contact">contact us</a> and let us know.
+                    <Link href="/contact">
+                        <a>contact us</a>
+                    </Link>
+                    and let us know.
                 </p>
             </section>
         </Layout>
