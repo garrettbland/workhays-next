@@ -8,10 +8,10 @@ const NotFound = () => {
                 <h1 className="text-3xl font-bold text-indigo-600 mb-3">Page Not Found</h1>
                 <p className="prose prose-lg prose-blue">
                     Uh Oh. Looks like this page cannot be found. If you are needing assistance,
-                    please
+                    please{' '}
                     <Link href="/contact">
                         <a>contact us</a>
-                    </Link>
+                    </Link>{' '}
                     and let us know.
                 </p>
             </section>
