@@ -1,9 +1,10 @@
 import Layout from '@/components/Layout'
+import PageTitle from '@/components/PageTitle'
 
 const Terms = () => {
     return (
         <Layout>
-            <div>Work Hays</div>
+            <PageTitle title="Terms of Service" description="" />
         </Layout>
     )
 }

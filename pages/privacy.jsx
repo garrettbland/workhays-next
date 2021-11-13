@@ -1,9 +1,10 @@
 import Layout from '@/components/Layout'
+import PageTitle from '@/components/PageTitle'
 
 const Privacy = () => {
     return (
         <Layout>
-            <div>Work Hays</div>
+            <PageTitle title="Privacy" description="" />
         </Layout>
     )
 }
