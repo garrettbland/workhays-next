@@ -18,8 +18,9 @@ const FAQ = ({ articles }) => {
 }
 
 /**
- * Grab articles from _faq
- * Fetches data at build time
+ * Statically get data at build time of this page
+ * In this case we get all of the FAQ's & create the links
+ * when this page builds
  */
 export const getStaticProps = async () => {
     console.log('Grabbing articles...')
