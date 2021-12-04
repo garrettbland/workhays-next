@@ -4,17 +4,18 @@ import ReactMarkdown from 'react-markdown'
 import fs from 'fs'
 import path from 'path'
 
-export default ({ article }) => {
+const FrequentlyAskedQuestion = ({ article }) => {
     return (
         <Layout>
             <div>Title: {article.frontmatter.title}</div>
-            <ReactMarkdown children={article.markdownBody} />
+            <ReactMarkdown>{article.markdownBody}</ReactMarkdown>
         </Layout>
     )
 }
 
 /**
- * Get article data
+ * Get static data at time of build. In this function,
+ * we take in params and grab whatever file
  */
 export const getStaticProps = async ({ params }) => {
     console.log('Getting info for article...')
@@ -34,7 +35,8 @@ export const getStaticProps = async ({ params }) => {
 }
 
 /**
- * Render all of the faq pages
+ * Render all of the faq pages, and define a list
+ * of paths to render at build time
  */
 export const getStaticPaths = async () => {
     console.log('Creating article paths...')
@@ -54,3 +56,5 @@ export const getStaticPaths = async () => {
         fallback: false,
     }
 }
+
+export default FrequentlyAskedQuestion

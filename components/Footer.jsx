@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import logo from '../public/work-hays-logo.svg'
-import { footer_links } from '../siteconfig.js'
+import { version, footer_links } from '../siteconfig.js'
 
 const Footer = () => {
     return (
@@ -17,7 +17,10 @@ const Footer = () => {
                                 width={32}
                                 className="w-8 h-8 rounded-full"
                             />
-                            <p>Work Hays</p>
+                            <div className="flex flex-col">
+                                <p>Work Hays</p>
+                                <p className="text-gray-600 text-sm">v{version}</p>
+                            </div>
                         </a>
                     </Link>
                 </div>
