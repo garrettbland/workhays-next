@@ -24,11 +24,11 @@ const FAQ = ({ articles }) => {
  */
 export const getStaticProps = async () => {
     console.log('Grabbing articles...')
-    const ARTICLE_PATH = path.join(process.cwd(), '_faqs')
-    const slugs = fs.readdirSync(ARTICLE_PATH)
+    const FAQS_PATH = path.join(process.cwd(), '_faqs')
+    const slugs = fs.readdirSync(FAQS_PATH)
     const articles = slugs.map((slug) => {
         const realSlug = slug.replace(/\.md$/, '')
-        const fullPath = path.join(ARTICLE_PATH, `${realSlug}.md`)
+        const fullPath = path.join(FAQS_PATH, `${realSlug}.md`)
         const fileContents = fs.readFileSync(fullPath, 'utf8')
         const { data } = matter(fileContents)
         return {

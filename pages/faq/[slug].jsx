@@ -1,14 +1,17 @@
 import Layout from '@/components/Layout'
 import matter from 'gray-matter'
 import ReactMarkdown from 'react-markdown'
+import PageTitle from '@/components/PageTitle'
 import fs from 'fs'
 import path from 'path'
 
 const FrequentlyAskedQuestion = ({ article }) => {
     return (
         <Layout>
-            <div>Title: {article.frontmatter.title}</div>
-            <ReactMarkdown>{article.markdownBody}</ReactMarkdown>
+            <PageTitle title={article.frontmatter.title} />
+            <article className="prose prose-indigo">
+                <ReactMarkdown>{article.markdownBody}</ReactMarkdown>
+            </article>
         </Layout>
     )
 }
@@ -19,9 +22,9 @@ const FrequentlyAskedQuestion = ({ article }) => {
  */
 export const getStaticProps = async ({ params }) => {
     console.log('Getting info for article...')
-    const ARTICLE_PATH = path.join(process.cwd(), '_faqs')
+    const FAQS_PATH = path.join(process.cwd(), '_faqs')
     const realSlug = params.slug.replace(/\.md$/, '')
-    const fullPath = path.join(ARTICLE_PATH, `${realSlug}.md`)
+    const fullPath = path.join(FAQS_PATH, `${realSlug}.md`)
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
     return {
@@ -40,9 +43,9 @@ export const getStaticProps = async ({ params }) => {
  */
 export const getStaticPaths = async () => {
     console.log('Creating article paths...')
-    const ARTICLE_PATH = path.join(process.cwd(), '_faqs')
+    const FAQS_PATH = path.join(process.cwd(), '_faqs')
     const paths = fs
-        .readdirSync(ARTICLE_PATH)
+        .readdirSync(FAQS_PATH)
         // remove file extensions
         .map((path) => path.replace(/\.mdx?$/, ''))
         // map the path into stastic paths required by next
