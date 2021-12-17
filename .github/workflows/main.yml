@@ -1,0 +1,38 @@
+name: Work Hays CI
+
+on:
+    # Trigger the workflow on push for the main branch
+    push:
+        branches:
+            - main
+    # Example if we wanted to do something else for pull requests
+    ## pull:
+    ## branches:
+    ## - main
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "🪝 New job was automatically triggered by a ${{ github.event_name }} event."
+
+            # Checkout the repo's code
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+            - run: echo "🖥 The workflow is now ready to test your code."
+
+            # Make sure we use Node 12.x for Next.js
+            - name: Use Node 12
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 12.x
+
+            # Install the dependencies needed
+            - name: Install dependecies
+              run: yarn install --frozen-lockfile
+
+            # Run the Next built in linter
+            - name: Begin Linting
+              run: yarn lint

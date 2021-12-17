@@ -1,0 +1,17 @@
+---
+title: How to renew your job posting
+---
+
+Follow the instructions below to renew an expired job posting.
+
+### Step 1.
+
+[Click here](/admin/#/login) to login to your employers dashboard.
+
+### Step 2.
+
+Once logged in, navigate to job postings using the navigation on the left hand side, or by using the dropdown from the mobile menu, located in the top right corner. Find the desired job posting, and click on it to view details.
+
+### Step 3.
+
+Once viewing the expired job posting, you will be presented with an alert at the top, allowing you to easily renew your job posting. Job postings are automatically set to run for _2 weeks_
