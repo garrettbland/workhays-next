@@ -53,19 +53,21 @@ export const getStaticProps = async () => {
         const realSlug = slug.replace(/\.md$/, '')
         const fullPath = path.join(FAQS_PATH, `${realSlug}.md`)
         const fileContents = fs.readFileSync(fullPath, 'utf8')
-        const last_modified = fs.statSync(fullPath).mtime
+        const last_modified = JSON.stringify(fs.statSync(fullPath).mtime)
         const { data } = matter(fileContents)
         return {
-            title: data.title,
+            ...data,
             slug: realSlug,
-            excerpt: data.excerpt ? data.excerpt : '',
-            last_modified: JSON.stringify(last_modified),
+            last_modified,
         }
     })
 
+    /**
+     * Return the faqs to the view after filtering out pending
+     */
     return {
         props: {
-            faqs,
+            faqs: faqs.filter((faq) => !faq.pending),
         },
     }
 }
