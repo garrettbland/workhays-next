@@ -1,5 +1,6 @@
 ---
 title: How to reset your password
+excerpt: Information on how to get into a locked account.
 ---
 
 There are many reasons you may want to reset your password. Follow the instructions below.

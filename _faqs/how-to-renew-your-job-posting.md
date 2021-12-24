@@ -1,5 +1,6 @@
 ---
 title: How to renew your job posting
+excerpt: Information on how to easily renew your job posting.
 ---
 
 Follow the instructions below to renew an expired job posting.

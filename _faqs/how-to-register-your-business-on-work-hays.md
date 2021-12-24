@@ -1,9 +1,9 @@
 ---
 title: How to register your business on Work Hays
+excerpt: Learn how to register your business for free today.
 ---
 
-Registering your business is simple. Follow these instructions below to register your employer
-or business today with Work Hays.
+Registering your business is simple. Follow these instructions below to register your employer or business today with Work Hays.
 
 ### Step 1.
 

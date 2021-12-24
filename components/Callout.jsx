@@ -15,10 +15,10 @@ const Callout = ({ type, icon, children }) => {
 
     return (
         <p
-            class={`px-3 py-1 flex flex-row items-center space-x-2 rounded border mb-6 ${generate_classes()}`}
+            className={`px-3 py-1 flex flex-row items-center space-x-2 rounded border mb-6 ${generate_classes()}`}
         >
             {icon ? icon : null}
-            <span class="prose">{children}</span>
+            <span className="prose">{children}</span>
         </p>
     )
 }
