@@ -51,4 +51,4 @@ jobs:
                   chmod +x "${GITHUB_WORKSPACE}/.github/example.sh"
 
                   # run script
-                  "${GITHUB_WORKSPACE}/.github/script.sh"
+                  "${GITHUB_WORKSPACE}/.github/example.sh"
