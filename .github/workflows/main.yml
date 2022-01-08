@@ -36,3 +36,19 @@ jobs:
             # Run the Next built in linter
             - name: Begin Linting
               run: yarn lint
+
+    run-aws-cli:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "Executing bash script that does something"
+
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Execute Script
+              run: |
+                  # make file runnable, might not be necessary
+                  chmod +x "${GITHUB_WORKSPACE}/.github/example.sh"
+
+                  # run script
+                  "${GITHUB_WORKSPACE}/.github/script.sh"
