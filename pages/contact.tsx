@@ -102,7 +102,7 @@ const Contact = () => {
                             value={contactForm.message}
                             className="col-span-1 md:col-span-2"
                             placeholder="Your Message"
-                            rows="5"
+                            rows={5}
                         ></textarea>
                     </div>
                     <Button title={isLoading ? 'Loading...' : 'Submit'} type="submit" />

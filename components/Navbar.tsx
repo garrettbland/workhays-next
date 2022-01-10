@@ -2,9 +2,10 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import logo from '../public/work-hays-logo.svg'
+import Button from '@/components/Button'
 
 const Navbar = () => {
-    const [isSignedIn, setSignedIn] = useState(false)
+    const [isSignedIn, setSignedIn] = useState<boolean>(false)
     return (
         <>
             <div className="bg-gray-100 border-b border-gray-200">
@@ -63,8 +64,11 @@ const Navbar = () => {
                             </div>
                         </div>
                         <Link href="/admin/#/jobs/new">
-                            <a className="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-5 py-2 hidden md:block text-sm transition-all">
+                            {/* <a className="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-5 py-2 hidden md:block text-sm transition-all">
                                 Post Your Job
+                            </a> */}
+                            <a>
+                                <Button title="Post Your Job" />
                             </a>
                         </Link>
                     </div>

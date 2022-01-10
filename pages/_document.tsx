@@ -1,6 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
-class MyDocument extends Document {
+class WorkHaysDocument extends Document {
     render() {
         return (
             <Html>
@@ -21,4 +21,4 @@ class MyDocument extends Document {
     }
 }
 
-export default MyDocument
+export default WorkHaysDocument
