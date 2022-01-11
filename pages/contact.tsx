@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, FormEvent, ChangeEvent } from 'react'
 import Layout from '@/components/Layout'
 import PageTitle from '@/components/PageTitle'
 import Callout from '@/components/Callout'
@@ -24,7 +24,7 @@ const Contact = () => {
     const [formError, setFormError] = useState('')
     const [isLoading, setLoading] = useState(false)
 
-    const submit_form = (event) => {
+    const submit_form = (event: FormEvent): void => {
         event.preventDefault()
         setFormError('')
         if (is_email_valid(contactForm.email)) {
@@ -36,7 +36,10 @@ const Contact = () => {
         }
     }
 
-    const update_form = (event, key) => {
+    const update_form = (
+        event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        key: string
+    ): void => {
         const value = event.target.value
         setContactForm({
             ...contactForm,

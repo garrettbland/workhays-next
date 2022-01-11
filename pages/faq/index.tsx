@@ -11,6 +11,7 @@ interface FrequentlyAskedQuestionType {
     title: string
     pending: boolean
     slug: string
+    excerpt: string
     last_modified: string
 }
 
@@ -66,6 +67,7 @@ export const getStaticProps: GetStaticProps = async () => {
         return {
             title: data.title,
             pending: data.pending || false,
+            excerpt: data.excerpt,
             slug: realSlug,
             last_modified,
         }

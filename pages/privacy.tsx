@@ -15,11 +15,11 @@ const Privacy = ({ title, body }: StaticPageProps) => (
 )
 
 export const getStaticProps: GetStaticProps = async () => {
-    const { data, content } = get_markdown_content('_articles', 'privacy.md')
+    const { title, body } = get_markdown_content('_articles', 'terms-of-service.md')
     return {
         props: {
-            title: data.title,
-            body: content,
+            title,
+            body,
         },
     }
 }

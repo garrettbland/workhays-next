@@ -25,7 +25,8 @@ const FrequentlyAskedQuestion = ({ title, body }: StaticPageProps) => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     console.log('Getting info for article...')
     const FAQS_PATH = path.join(process.cwd(), '_faqs')
-    const realSlug = params.slug.replace(/\.md$/, '')
+    const original_file_name = (params?.slug as string) ?? ''
+    const realSlug = original_file_name.replace(/\.md$/, '')
     const fullPath = path.join(FAQS_PATH, `${realSlug}.md`)
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
