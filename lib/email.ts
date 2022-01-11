@@ -1,8 +1,6 @@
 /**
  * Validates email structure _@_@._
- * @param {string} email
- * @returns boolean
  */
-export const is_email_valid = (email) => {
+export const is_email_valid = (email: string): boolean => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }

@@ -67,8 +67,8 @@ Distributed under the MIT License.
 
 ## Contact
 
-Contact information coming soon...
+If you would like to get in touch with us, please [click here](https://workhays.com/contact) to fill out a contact form.
 
 ## Acknowledgments
 
-Acknowledgments coming soon...
+Formerly known as Hays Has Jobs, the Ellis County Coalition for Economic Development (now [Grow Hays](https://www.growhays.com/)) started and grew the website back in 2010. In 2019, Garrett Bland and Lane Patterson worked with Grow Hays to rebuild and maintain the website.

@@ -5,8 +5,17 @@ import path from 'path'
 import Link from 'next/link'
 import PageTitle from '@/components/PageTitle'
 import { DateTime } from 'luxon'
+import { GetStaticProps } from 'next'
 
-const FAQ = ({ faqs }) => {
+interface FrequentlyAskedQuestionType {
+    title: string
+    pending: boolean
+    slug: string
+    excerpt: string
+    last_modified: string
+}
+
+const FAQ = ({ faqs }: { faqs: FrequentlyAskedQuestionType[] }) => {
     return (
         <Layout>
             <PageTitle
@@ -45,7 +54,7 @@ const FAQ = ({ faqs }) => {
  * In this case we get all of the FAQ's & create the links
  * when this page builds
  */
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
     console.log('Grabbing faqs...')
     const FAQS_PATH = path.join(process.cwd(), '_faqs')
     const slugs = fs.readdirSync(FAQS_PATH)
@@ -56,7 +65,9 @@ export const getStaticProps = async () => {
         const last_modified = JSON.stringify(fs.statSync(fullPath).mtime)
         const { data } = matter(fileContents)
         return {
-            ...data,
+            title: data.title,
+            pending: data.pending || false,
+            excerpt: data.excerpt,
             slug: realSlug,
             last_modified,
         }

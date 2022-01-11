@@ -4,13 +4,15 @@ import ReactMarkdown from 'react-markdown'
 import PageTitle from '@/components/PageTitle'
 import fs from 'fs'
 import path from 'path'
+import { GetStaticProps, GetStaticPaths } from 'next'
+import { StaticPageProps } from '@/types'
 
-const FrequentlyAskedQuestion = ({ article }) => {
+const FrequentlyAskedQuestion = ({ title, body }: StaticPageProps) => {
     return (
         <Layout>
-            <PageTitle title={article.frontmatter.title} />
+            <PageTitle title={title} />
             <article className="prose prose-indigo">
-                <ReactMarkdown>{article.markdownBody}</ReactMarkdown>
+                <ReactMarkdown>{body}</ReactMarkdown>
             </article>
         </Layout>
     )
@@ -20,19 +22,18 @@ const FrequentlyAskedQuestion = ({ article }) => {
  * Get static data at time of build. In this function,
  * we take in params and grab whatever file
  */
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
     console.log('Getting info for article...')
     const FAQS_PATH = path.join(process.cwd(), '_faqs')
-    const realSlug = params.slug.replace(/\.md$/, '')
+    const original_file_name = (params?.slug as string) ?? ''
+    const realSlug = original_file_name.replace(/\.md$/, '')
     const fullPath = path.join(FAQS_PATH, `${realSlug}.md`)
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
     return {
         props: {
-            article: {
-                frontmatter: data,
-                markdownBody: content,
-            },
+            title: data.title,
+            body: content,
         },
     }
 }
@@ -41,7 +42,7 @@ export const getStaticProps = async ({ params }) => {
  * Render all of the faq pages, and define a list
  * of paths to render at build time
  */
-export const getStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
     console.log('Creating article paths...')
     const FAQS_PATH = path.join(process.cwd(), '_faqs')
     const paths = fs
