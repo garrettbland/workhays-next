@@ -25,8 +25,6 @@ Following the guide below to get started developing.
 
 Next.js requires Node version `12.22.0` or later. [Click here](https://nextjs.org/docs/getting-started#system-requirements) for more information on system requirements.
 
-Yarn is also required to install packages and run scripts. To install, run `npm install --global yarn`
-
 ### Installation
 
 Follow these steps to get Work Hays installed locally (commands documented below for Mac)
@@ -40,7 +38,7 @@ git clone https://github.com/garrettbland/workhays-next
 2. Open a terminal and navigate to the `workhays-next` directory and install the packages.
 
 ```
-yarn install
+npm install
 ```
 
 ### Starting Dev Environment
@@ -50,12 +48,16 @@ If you haven't already, please make sure you have followed the steps above.
 1. Open up a terminal and navigate to the `workhays-next` directory and run the following
 
 ```
-yarn dev
+npm run dev
 ```
 
 > Alternatively you can open up your favorite code editor and run this command in the built in shell
 
 Thats it! You should see Next.js going through the build steps and logging to the terminal. Once ready to go, it will start a development server at `http:localhost:3000`.
+
+## Testing
+
+Information regarding tests coming soon...
 
 ## Contributing
 

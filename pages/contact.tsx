@@ -5,7 +5,7 @@ import Callout from '@/components/Callout'
 import Link from 'next/link'
 import { BookOpenIcon, CheckIcon, ExclamationCircleIcon } from '@heroicons/react/outline'
 import Button from '@/components/Button'
-import { is_email_valid } from '@/lib/email'
+import { is_email_valid } from '@/libs/email'
 
 const DEFAULT_FORM_FIELDS = {
     first_name: '',
