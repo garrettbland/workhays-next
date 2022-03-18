@@ -1,0 +1,19 @@
+{
+    "files.exclude": {
+        ".prettierrc.json": true,
+        "node_modules": true,
+        ".gitignore": true,
+        ".nvmrc": true,
+        "package-lock.json": true,
+        "tailwind.config.js": true,
+        "netlify.toml": true,
+        ".next": true,
+        "tsconfig.json": true,
+        ".eslintrc.json": true,
+        "next.config.js": true,
+        "next-env.d.ts": true,
+        "postcss.config.js": true,
+        "jest.config.ts": true,
+        "jest.setup.ts": true
+    }
+}
