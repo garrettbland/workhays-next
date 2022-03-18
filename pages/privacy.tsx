@@ -1,7 +1,7 @@
 import Layout from '@/components/Layout'
 import PageTitle from '@/components/PageTitle'
 import ReactMarkdown from 'react-markdown'
-import { get_markdown_content } from '@/lib/article'
+import { get_markdown_content } from '@/libs/article'
 import { GetStaticProps } from 'next'
 import { StaticPageProps } from '@/types'
 

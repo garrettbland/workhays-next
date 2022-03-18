@@ -17,7 +17,7 @@
         "jsx": "preserve",
         "paths": {
             "@/components/*": ["components/*"],
-            "@/lib/*": ["lib/*"],
+            "@/libs/*": ["libs/*"],
             "@/types": ["types.ts"]
         }
     },
