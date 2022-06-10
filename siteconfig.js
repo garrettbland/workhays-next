@@ -46,6 +46,6 @@ export const footer_links = [
     },
     {
         title: "FAQ's",
-        href: '/faq',
+        href: '/faqs',
     },
 ]
