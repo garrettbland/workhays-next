@@ -49,47 +49,20 @@ const FAQ = ({ faqs }: { faqs: FrequentlyAskedQuestionType[] }) => {
 export const getStaticProps: GetStaticProps = async () => {
     console.log('Grabbing faqs...')
 
-    /**
-     * Need to mega clean this up...
-     */
-    const fm = (markdown: string): Object => {
-        const search_term = 'export const meta = {'
-        const start = markdown.indexOf(search_term) + search_term.length
-        const end = markdown.indexOf('}', start)
-        const front_matter_raw = markdown.substring(start, end)
-        const separated_commas = front_matter_raw.split(',').filter((item) => item !== '')
-        let convert = {} as any
-        separated_commas.forEach((item) => {
-            console.log(item)
-            const [key, value] = item.split(':')
-            if (!key || !value) {
-                return
-            }
-            convert[key.replace(/\n/g, '').trim()] = value
-                .replace(/\n/g, '')
-                .replace(/\'/g, '')
-                .trim()
-        })
-
-        return convert
-    }
-
-    const FAQS_PATH = path.join(process.cwd(), 'pages/faqs')
-    const slugs = fs.readdirSync(FAQS_PATH).filter((slug) => slug !== 'index.tsx')
+    const FAQS_PATH = path.join(process.cwd(), '_faqs')
+    const slugs = fs.readdirSync(FAQS_PATH)
     const faqs = slugs.map((filename) => {
         const realSlug = filename.replace(/\.mdx$/, '')
         const fullPath = path.join(FAQS_PATH, filename)
 
         const fileContents = fs.readFileSync(fullPath, 'utf8')
-        const { title } = fm(fileContents) as any
+        const { title, excerpt = '', pending = false } = matter(fileContents).data
 
-        //console.log(frontMatter(matter(fileContents).content.toString()))
-
-        //console.log(frontMatter(matter(fileContents).content))
         return {
             title: title,
             slug: realSlug,
-            pending: false,
+            excerpt: excerpt,
+            pending: pending,
         }
     })
 
