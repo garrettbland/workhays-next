@@ -9,8 +9,8 @@ interface CalloutProps {
 /**
  * Generates the callout style depending on the type
  */
-const generate_classes = (callout_type: string = ''): string => {
-    switch (callout_type) {
+const generateClasses = (calloutType = ''): string => {
+    switch (calloutType) {
         case 'success': {
             return 'bg-green-100 text-green-600 border-green-400'
         }
@@ -26,7 +26,7 @@ const generate_classes = (callout_type: string = ''): string => {
 const Callout = ({ type, icon, children }: CalloutProps) => {
     return (
         <p
-            className={`px-3 py-1 flex flex-row items-center space-x-2 rounded border mb-6 ${generate_classes(
+            className={`px-3 py-1 flex flex-row items-center space-x-2 rounded border mb-6 ${generateClasses(
                 type
             )}`}
         >

@@ -1,6 +1,6 @@
 export const version = '1.0.0'
 
-export const navbar_links = [
+export const navbarLinks = [
     {
         title: 'Jobs',
         href: '/',
@@ -15,7 +15,7 @@ export const navbar_links = [
     },
 ]
 
-export const footer_links = [
+export const footerLinks = [
     {
         title: 'Jobs',
         href: '/',

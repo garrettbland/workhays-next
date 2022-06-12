@@ -9,7 +9,7 @@
         "netlify.toml": true,
         ".next": true,
         "tsconfig.json": true,
-        ".eslintrc.json": true,
+        //".eslintrc.json": true,
         "next.config.js": true,
         "next-env.d.ts": true,
         "postcss.config.js": true,

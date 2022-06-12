@@ -5,11 +5,11 @@ import Callout from '@/components/Callout'
 import Link from 'next/link'
 import { BookOpenIcon, CheckIcon, ExclamationCircleIcon } from '@heroicons/react/outline'
 import Button from '@/components/Button'
-import { is_email_valid } from '@/libs/email'
+import { isEmailValid } from '@/utils/email'
 
 const DEFAULT_FORM_FIELDS = {
-    first_name: '',
-    last_name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     business: '',
     message: '',
@@ -22,12 +22,12 @@ const Contact = () => {
     const [contactForm, setContactForm] = useState(DEFAULT_FORM_FIELDS)
     const [successfulSubmit, setSuccessfulSubmit] = useState(false)
     const [formError, setFormError] = useState('')
-    const [isLoading, setLoading] = useState(false)
+    const [isLoading] = useState(false)
 
-    const submit_form = (event: FormEvent): void => {
+    const submitForm = (event: FormEvent): void => {
         event.preventDefault()
         setFormError('')
-        if (is_email_valid(contactForm.email)) {
+        if (isEmailValid(contactForm.email)) {
             setContactForm(DEFAULT_FORM_FIELDS)
             setSuccessfulSubmit(true)
             alert(JSON.stringify(contactForm))
@@ -36,7 +36,7 @@ const Contact = () => {
         }
     }
 
-    const update_form = (
+    const updateForm = (
         event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
         key: string
     ): void => {
@@ -70,38 +70,38 @@ const Contact = () => {
                 </Callout>
             )}
             <section>
-                <form name="contact" onSubmit={submit_form}>
+                <form name="contact" onSubmit={submitForm}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
                         <input
-                            onChange={(e) => update_form(e, 'first_name')}
-                            value={contactForm.first_name}
+                            onChange={(e) => updateForm(e, 'firstName')}
+                            value={contactForm.firstName}
                             name="first"
                             placeholder="First Name"
                             type="text"
                         />
                         <input
-                            onChange={(e) => update_form(e, 'last_name')}
-                            value={contactForm.last_name}
+                            onChange={(e) => updateForm(e, 'lastName')}
+                            value={contactForm.lastName}
                             name="last"
                             placeholder="Last Name"
                             type="text"
                         />
                         <input
-                            onChange={(e) => update_form(e, 'email')}
+                            onChange={(e) => updateForm(e, 'email')}
                             value={contactForm.email}
                             name="email"
                             placeholder="Email"
                             type="email"
                         />
                         <input
-                            onChange={(e) => update_form(e, 'business')}
+                            onChange={(e) => updateForm(e, 'business')}
                             value={contactForm.business}
                             name="business"
                             placeholder="Business (optional)"
                             type="text"
                         />
                         <textarea
-                            onChange={(e) => update_form(e, 'message')}
+                            onChange={(e) => updateForm(e, 'message')}
                             value={contactForm.message}
                             className="col-span-1 md:col-span-2"
                             placeholder="Your Message"

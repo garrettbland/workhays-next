@@ -11,7 +11,7 @@ import { MDXRemote } from 'next-mdx-remote'
 
 interface FAQ {
     frontMatter: { title: string }
-    mdxSource: any
+    mdxSource: Record<string, unknown>
 }
 
 /**

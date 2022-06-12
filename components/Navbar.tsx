@@ -5,7 +5,7 @@ import logo from '../public/work-hays-logo.svg'
 import Button from '@/components/Button'
 
 const Navbar = () => {
-    const [isSignedIn, setSignedIn] = useState<boolean>(false)
+    const [isSignedIn] = useState<boolean>(false)
     return (
         <>
             <div className="bg-gray-100 border-b border-gray-200">

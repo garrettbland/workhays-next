@@ -17,10 +17,10 @@
         "jsx": "preserve",
         "paths": {
             "@/components/*": ["components/*"],
-            "@/libs/*": ["libs/*"],
+            "@/utils/*": ["utils/*"],
             "@/types": ["types.ts"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/privacy.mdx"],
     "exclude": ["node_modules"]
 }
