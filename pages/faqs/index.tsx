@@ -4,7 +4,6 @@ import fs from 'fs'
 import path from 'path'
 import Link from 'next/link'
 import PageTitle from '@/components/PageTitle'
-import { DateTime } from 'luxon'
 import { GetStaticProps } from 'next'
 
 interface FrequentlyAskedQuestionType {
@@ -24,7 +23,6 @@ const FAQ = ({ faqs }: { faqs: FrequentlyAskedQuestionType[] }) => {
                     Some of our most frequently asked questions and tutorials.
                 `}
             />
-            {/* <div className="mb-6">Future search bar</div> */}
             <article>
                 {faqs.map((item, index) => (
                     <div className="mb-6" key={index}>
@@ -47,8 +45,6 @@ const FAQ = ({ faqs }: { faqs: FrequentlyAskedQuestionType[] }) => {
  * when this page builds
  */
 export const getStaticProps: GetStaticProps = async () => {
-    console.log('Grabbing faqs...')
-
     const FAQS_PATH = path.join(process.cwd(), '_faqs')
     const slugs = fs.readdirSync(FAQS_PATH)
     const faqs = slugs.map((filename) => {
