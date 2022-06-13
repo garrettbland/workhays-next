@@ -24,6 +24,7 @@ export enum Industries {
 export interface Job {
     id: string
     employer_id: string
+    employer_title: string
     title: string
     status: 'active' | 'inactive' | 'archived' | 'deleted'
     type: 'full_time' | 'part_time' | 'seasonal'
