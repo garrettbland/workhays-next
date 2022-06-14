@@ -32,9 +32,9 @@ export interface Job {
     description?: string
     application_link?: string
     promoted: boolean
+    expires_at: string
     created_at: string
     updated_at: string
-    expires_at: string
 }
 
 export interface Employer {
@@ -92,4 +92,20 @@ export interface JobMetric {
     device: 'mobile' | 'tablet' | 'desktop'
     promoted_click: boolean
     created_at: string
+}
+
+export interface BannerAd {
+    id: string
+    title: string
+    description: string
+    background_image: string
+    button: {
+        title: string
+        destination_url: string
+        background_color: string
+        text_color: string
+    }
+    expires_at: string
+    created_at: string
+    updated_at: string
 }
