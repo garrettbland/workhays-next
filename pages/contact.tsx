@@ -1,5 +1,4 @@
 import { useState, FormEvent, ChangeEvent } from 'react'
-import Layout from '@/components/Layout'
 import PageTitle from '@/components/PageTitle'
 import Callout from '@/components/Callout'
 import Link from 'next/link'
@@ -48,13 +47,13 @@ const Contact = () => {
     }
 
     return (
-        <Layout>
+        <>
             <PageTitle
                 title="Contact Us"
                 description="Have questions or comments? Please fill out the form below and we will be in touch as soon as we can."
             />
             <Callout icon={<BookOpenIcon className="h-6 w-6" />}>
-                <Link href="/faq">
+                <Link href="/faqs">
                     <a>Click here</a>
                 </Link>{' '}
                 to view our frequently asked questions
@@ -111,7 +110,7 @@ const Contact = () => {
                     <Button title={isLoading ? 'Loading...' : 'Submit'} type="submit" />
                 </form>
             </section>
-        </Layout>
+        </>
     )
 }
 

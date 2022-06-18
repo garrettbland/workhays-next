@@ -1,4 +1,3 @@
-import Layout from '@/components/Layout'
 import matter from 'gray-matter'
 import PageTitle from '@/components/PageTitle'
 import Button from '@/components/Button'
@@ -21,12 +20,12 @@ const components = { Button }
 
 const FrequentlyAskedQuestion = ({ frontMatter: { title }, mdxSource }: FAQ) => {
     return (
-        <Layout>
+        <>
             <PageTitle title={title} />
             <PageContent>
                 <MDXRemote {...mdxSource} components={components} />
             </PageContent>
-        </Layout>
+        </>
     )
 }
 

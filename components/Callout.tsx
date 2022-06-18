@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
 interface CalloutProps {
-    type?: 'success' | 'warning'
+    type?: 'success' | 'warning' | 'info'
     icon?: ReactNode
     children: string | ReactNode
 }
@@ -16,6 +16,9 @@ const generateClasses = (calloutType = ''): string => {
         }
         case 'warning': {
             return 'bg-orange-100 text-orange-600 border-orange-400'
+        }
+        case 'info': {
+            return 'bg-blue-100 text-blue-600 border-blue-400'
         }
         default: {
             return 'bg-gray-100 text-gray-600 border-gray-200'

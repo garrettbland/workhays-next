@@ -1,4 +1,3 @@
-import Layout from '@/components/Layout'
 import matter from 'gray-matter'
 import fs from 'fs'
 import path from 'path'
@@ -16,7 +15,7 @@ interface FrequentlyAskedQuestionType {
 
 const FAQ = ({ faqs }: { faqs: FrequentlyAskedQuestionType[] }) => {
     return (
-        <Layout>
+        <>
             <PageTitle
                 title="Frequently Asked Questions"
                 description={`
@@ -35,7 +34,7 @@ const FAQ = ({ faqs }: { faqs: FrequentlyAskedQuestionType[] }) => {
                     </div>
                 ))}
             </article>
-        </Layout>
+        </>
     )
 }
 

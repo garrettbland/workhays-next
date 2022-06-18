@@ -1,9 +1,8 @@
-import Layout from '@/components/Layout'
 import Link from 'next/link'
 import PageTitle from '@/components/PageTitle'
 
 const NotFound = () => (
-    <Layout>
+    <>
         <PageTitle
             title="Page Not Found"
             description={
@@ -17,7 +16,7 @@ const NotFound = () => (
                 </>
             }
         />
-    </Layout>
+    </>
 )
 
 export default NotFound

@@ -11,18 +11,18 @@ const Navbar = () => {
             <div className="bg-gray-100 border-b border-gray-200">
                 <div className="max-w-4xl mx-auto px-5 py-1 text-sm flex flex-row justify-end text-black divide-gray-200">
                     {isSignedIn && (
-                        <Link href="/admin/#/dashboard">
+                        <Link href="/admin/dashboard">
                             <a className="antialiased hover:underline px-4">Dashboard</a>
                         </Link>
                     )}
                     {!isSignedIn && (
                         <>
-                            <Link href="/admin/#/register">
+                            <Link href="/admin/register">
                                 <a className="antialiased hover:underline px-4">
                                     Employer Registration
                                 </a>
                             </Link>
-                            <Link href="/admin/#/sign-in">
+                            <Link href="/admin/sign-in">
                                 <a className="antialiased hover:underline px-4">Sign In</a>
                             </Link>
                         </>
