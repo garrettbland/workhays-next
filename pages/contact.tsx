@@ -2,9 +2,11 @@ import { useState, FormEvent, ChangeEvent } from 'react'
 import PageTitle from '@/components/PageTitle'
 import Callout from '@/components/Callout'
 import Link from 'next/link'
-import { BookOpenIcon, CheckIcon, ExclamationCircleIcon } from '@heroicons/react/outline'
+import { BookOpenIcon, CheckIcon, ExclamationCircleIcon, MailIcon } from '@heroicons/react/outline'
 import Button from '@/components/Button'
 import { isEmailValid } from '@/utils/email'
+
+type FormStatuses = 'idle' | 'loading' | 'complete' | 'error' | 'invalid_email'
 
 const DEFAULT_FORM_FIELDS = {
     firstName: '',
@@ -18,20 +20,18 @@ const DEFAULT_FORM_FIELDS = {
  * This is a function that does something
  */
 const Contact = () => {
+    const [status, setStatus] = useState<FormStatuses>('idle')
     const [contactForm, setContactForm] = useState(DEFAULT_FORM_FIELDS)
-    const [successfulSubmit, setSuccessfulSubmit] = useState(false)
-    const [formError, setFormError] = useState('')
-    const [isLoading] = useState(false)
 
     const submitForm = (event: FormEvent): void => {
         event.preventDefault()
-        setFormError('')
+        setStatus('loading')
         if (isEmailValid(contactForm.email)) {
             setContactForm(DEFAULT_FORM_FIELDS)
-            setSuccessfulSubmit(true)
+            setStatus('complete')
             alert(JSON.stringify(contactForm))
         } else {
-            setFormError('Error. Please provide a valid email address.')
+            setStatus('invalid_email')
         }
     }
 
@@ -58,12 +58,17 @@ const Contact = () => {
                 </Link>{' '}
                 to view our frequently asked questions
             </Callout>
-            {formError !== '' && (
+            {status === 'error' && (
                 <Callout type="warning" icon={<ExclamationCircleIcon className="h-6 w-6" />}>
-                    {formError}
+                    Error. Something went wrong submitting your form, please try again.
                 </Callout>
             )}
-            {successfulSubmit && (
+            {status === 'invalid_email' && (
+                <Callout type="warning" icon={<MailIcon className="h-6 w-6" />}>
+                    Error. Please provide a valid email address.
+                </Callout>
+            )}
+            {status === 'complete' && (
                 <Callout type="success" icon={<CheckIcon className="h-6 w-6" />}>
                     Success! Your submission was submitted successfully.
                 </Callout>
@@ -107,7 +112,7 @@ const Contact = () => {
                             rows={5}
                         ></textarea>
                     </div>
-                    <Button title={isLoading ? 'Loading...' : 'Submit'} type="submit" />
+                    <Button title={status === 'loading' ? 'Loading...' : 'Submit'} type="submit" />
                 </form>
             </section>
         </>
