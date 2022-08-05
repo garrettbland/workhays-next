@@ -10,10 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Github Workflows & automated tests
+-   Branch protections for main and required PR
 
-### Fixed
+### Updated
 
--   MDX Component
+-   Moved to Vercel hosting
 
 ## [0.1.0] - 2022-03-17
 
