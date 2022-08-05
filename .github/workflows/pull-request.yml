@@ -24,7 +24,7 @@ jobs:
             # Install the dependencies, lint, test, build
             - run: npm ci --no-audit
             - run: npm run lint --if-present
-            - run: npm test:ci
+            - run: npm run test:ci
             - run: npm run build --if-present
 
     coverage:
