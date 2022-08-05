@@ -1,0 +1,39 @@
+name: Work Hays Pull Request
+
+on:
+    pull_request:
+        branches:
+            - main
+        types: [opened, synchronize]
+
+jobs:
+    code-quality:
+        name: Code Quality
+        runs-on: ubuntu-latest
+        steps:
+            # Checkout the repo's code
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            # Make sure we use Node 12.x for Next.js
+            - name: Use Node 16
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 16.x
+
+            # Install the dependencies, lint, test, build
+            - run: npm ci --no-audit
+            - run: npm run lint --if-present
+            - run: npm test:ci
+            - run: npm run build --if-present
+
+    coverage:
+        name: Code Coverage
+        runs-on: ubuntu-latest
+        permissions:
+            checks: write
+            pull-requests: write
+            contents: write
+        steps:
+            - uses: actions/checkout@v1
+            - uses: ArtiomTr/jest-coverage-report-action@v2
