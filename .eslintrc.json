@@ -17,6 +17,7 @@
                 "format": ["camelCase"]
             }
         ],
-        "@typescript-eslint/no-unused-vars": ["error", { "ignoreRestSiblings": true }]
+        "@typescript-eslint/no-unused-vars": ["error", { "ignoreRestSiblings": true }],
+        "react/no-unescaped-entities": 0
     }
 }

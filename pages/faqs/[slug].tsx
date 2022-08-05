@@ -23,7 +23,7 @@ const FrequentlyAskedQuestion = ({ frontMatter: { title }, mdxSource }: FAQ) => 
         <>
             <PageTitle title={title} />
             <PageContent>
-                <MDXRemote {...mdxSource} components={components} />
+                <MDXRemote compiledSource="" {...mdxSource} components={components} />
             </PageContent>
         </>
     )

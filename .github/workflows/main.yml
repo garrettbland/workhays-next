@@ -1,54 +1,24 @@
 name: Work Hays CI
 
 on:
-    # Trigger the workflow on push for the main branch
+    # Trigger the workflow on push for the main branch. Branch protections for
+    # main are turned on. Meaning that only a pull request that has passing CI
+    # actions will be allowed to trigger this after being merged.
     push:
         branches:
             - main
-    # Example if we wanted to do something else for pull requests
-    ## pull:
-    ## branches:
-    ## - main
 
 jobs:
-    lint:
+    example-job:
+        name: Example Job
         runs-on: ubuntu-latest
         steps:
-            - run: echo "🪝 New job was automatically triggered by a ${{ github.event_name }} event."
-
-            # Checkout the repo's code
-            - name: Checkout repository
+            - name: Checkout repo
               uses: actions/checkout@v2
 
-            - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-            - run: echo "🖥 The workflow is now ready to test your code."
-
-            # Make sure we use Node 12.x for Next.js
-            - name: Use Node 12
+            - name: User Node 16
               uses: actions/setup-node@v1
               with:
-                  node-version: 12.x
+                  node-version: 16.x
 
-            # Install the dependencies needed
-            - name: Install dependecies
-              run: yarn install --frozen-lockfile
-
-            # Run the Next built in linter
-            - name: Begin Linting
-              run: yarn lint
-
-    run-aws-cli:
-        runs-on: ubuntu-latest
-        steps:
-            - run: echo "Executing bash script that does something"
-
-            - name: Checkout repository
-              uses: actions/checkout@v2
-
-            - name: Execute Script
-              run: |
-                  # make file runnable, might not be necessary
-                  chmod +x "${GITHUB_WORKSPACE}/.github/example.sh"
-
-                  # run script
-                  "${GITHUB_WORKSPACE}/.github/example.sh"
+            - run: 'echo "🏗 Example job on merge to main - send email alert or something?"'
