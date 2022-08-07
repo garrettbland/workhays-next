@@ -7,6 +7,7 @@ import { JobItem as JobItemType } from '@/types'
 import { faker } from '@faker-js/faker'
 import { useEffect, useState } from 'react'
 import { Loader } from '@/components/Loader'
+import { useRouter } from 'next/router'
 
 const FAKE_JOBS: JobItemType[] = [
     {
@@ -49,6 +50,7 @@ const fakeFetch = () =>
     })
 
 export const JobList = () => {
+    const router = useRouter()
     const [isLoading, setLoading] = useState(false)
     const [jobs, setJobs] = useState<JobItemType[]>([])
 
@@ -64,17 +66,20 @@ export const JobList = () => {
     }
 
     useEffect(() => {
+        // if router.isReady
+        console.log('fetching jobs...')
+        console.log(router.query.page ?? 0)
         fetchJobs()
-    }, [])
+    }, [router.query.page])
 
     return (
         <div className="relative">
             {isLoading && (
                 <Loader>
                     <>
-                        {[...Array(3)].map(() => (
+                        {[...Array(3)].map((_, index) => (
                             <JobItem
-                                key={''}
+                                key={index}
                                 id={''}
                                 title={''}
                                 employerTitle={''}
@@ -84,15 +89,16 @@ export const JobList = () => {
                     </>
                 </Loader>
             )}
-            {jobs.map(({ id, title, employerTitle, updatedAt }) => (
-                <JobItem
-                    key={id}
-                    id={id}
-                    title={title}
-                    employerTitle={employerTitle}
-                    updatedAt={updatedAt}
-                />
-            ))}
+            {!isLoading &&
+                jobs.map(({ id, title, employerTitle, updatedAt }) => (
+                    <JobItem
+                        key={id}
+                        id={id}
+                        title={title}
+                        employerTitle={employerTitle}
+                        updatedAt={updatedAt}
+                    />
+                ))}
         </div>
     )
 }
