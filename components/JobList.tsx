@@ -12,13 +12,37 @@ const FAKE_JOBS: JobItemType[] = [
     {
         id: faker.datatype.string(7),
         title: faker.name.jobType(),
-        employer_title: faker.company.companyName(),
-        updated_at: faker.date.recent().toDateString(),
+        employerTitle: faker.company.companyName(),
+        updatedAt: faker.date.recent().toDateString(),
+    },
+    {
+        id: faker.datatype.string(7),
+        title: faker.name.jobType(),
+        employerTitle: faker.company.companyName(),
+        updatedAt: faker.date.recent().toDateString(),
+    },
+    {
+        id: faker.datatype.string(7),
+        title: faker.name.jobType(),
+        employerTitle: faker.company.companyName(),
+        updatedAt: faker.date.recent().toDateString(),
+    },
+    {
+        id: faker.datatype.string(7),
+        title: faker.name.jobType(),
+        employerTitle: faker.company.companyName(),
+        updatedAt: faker.date.recent().toDateString(),
+    },
+    {
+        id: faker.datatype.string(7),
+        title: faker.name.jobType(),
+        employerTitle: faker.company.companyName(),
+        updatedAt: faker.date.recent().toDateString(),
     },
 ]
 
 const fakeFetch = () =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
         setTimeout(() => {
             resolve('done')
         }, 2000)
@@ -31,7 +55,7 @@ export const JobList = () => {
     const fetchJobs = async () => {
         try {
             setLoading(true)
-            const data = await fakeFetch()
+            await fakeFetch()
             setJobs(FAKE_JOBS)
         } catch (err) {
         } finally {
@@ -53,20 +77,20 @@ export const JobList = () => {
                                 key={''}
                                 id={''}
                                 title={''}
-                                employer_title={''}
-                                updated_at={''}
+                                employerTitle={''}
+                                updatedAt={''}
                             />
                         ))}
                     </>
                 </Loader>
             )}
-            {jobs.map(({ id, title, employer_title, updated_at }) => (
+            {jobs.map(({ id, title, employerTitle, updatedAt }) => (
                 <JobItem
                     key={id}
                     id={id}
                     title={title}
-                    employer_title={employer_title}
-                    updated_at={updated_at}
+                    employerTitle={employerTitle}
+                    updatedAt={updatedAt}
                 />
             ))}
         </div>

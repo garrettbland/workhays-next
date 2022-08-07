@@ -4,8 +4,8 @@
 import { JobItem as JobItemType } from '@/types'
 import Link from 'next/link'
 
-export const JobItem = ({ employer_title, title, updated_at, id }: JobItemType) => {
-    const isLoading = employer_title === '' || title === ''
+export const JobItem = ({ employerTitle, title, updatedAt, id }: JobItemType) => {
+    const isLoading = employerTitle === '' || title === ''
 
     return (
         <Link href={isLoading ? '#' : `/jobs/${id}`}>
@@ -19,7 +19,7 @@ export const JobItem = ({ employer_title, title, updated_at, id }: JobItemType) 
                         {isLoading ? (
                             <div className="bg-gray-300 rounded-full h-2 w-48 mb-3"></div>
                         ) : (
-                            employer_title
+                            employerTitle
                         )}
                     </span>
                     <span className="font-medium">
@@ -36,7 +36,7 @@ export const JobItem = ({ employer_title, title, updated_at, id }: JobItemType) 
                             {isLoading ? (
                                 <div className="bg-gray-500 rounded-full h-2 w-24"></div>
                             ) : (
-                                updated_at
+                                updatedAt
                             )}
                         </span>
                     </div>

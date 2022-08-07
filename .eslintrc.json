@@ -11,7 +11,7 @@
         ],
         "no-unused-vars": ["error"],
         "@typescript-eslint/naming-convention": [
-            "error",
+            "warn",
             {
                 "selector": ["function"],
                 "format": ["camelCase"]
