@@ -1,5 +1,5 @@
 import { useState, FormEvent, ChangeEvent } from 'react'
-import PageTitle from '@/components/PageTitle'
+import { PageTitle } from '@/components/PageTitle'
 import Callout from '@/components/Callout'
 import Link from 'next/link'
 import { BookOpenIcon, CheckIcon, ExclamationCircleIcon, MailIcon } from '@heroicons/react/outline'

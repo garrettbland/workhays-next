@@ -37,6 +37,11 @@ export interface Job {
     updated_at: string
 }
 
+/**
+ * Helper used for job items and job list components
+ */
+export type JobItem = Pick<Job, 'id' | 'title' | 'employer_title' | 'updated_at'>
+
 export interface Employer {
     id: string
     title: string

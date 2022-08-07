@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react'
-import PageTitle from '@/components/PageTitle'
+import { PageTitle } from '@/components/PageTitle'
 import Callout from '@/components/Callout'
 import Link from 'next/link'
 import { QuestionMarkCircleIcon, ExclamationCircleIcon } from '@heroicons/react/outline'

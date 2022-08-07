@@ -1,5 +1,5 @@
 import matter from 'gray-matter'
-import PageTitle from '@/components/PageTitle'
+import { PageTitle } from '@/components/PageTitle'
 import Button from '@/components/Button'
 import fs from 'fs'
 import path from 'path'
