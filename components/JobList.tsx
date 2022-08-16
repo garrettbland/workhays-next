@@ -8,56 +8,58 @@ import { faker } from '@faker-js/faker'
 import { useEffect, useState } from 'react'
 import { Loader } from '@/components/Loader'
 import { useRouter } from 'next/router'
+import { Button } from '@/components/Button'
 
 const FAKE_JOBS: JobItemType[] = [
     {
-        id: faker.datatype.string(7),
+        id: faker.datatype.uuid(),
         title: faker.name.jobType(),
         employerTitle: faker.company.companyName(),
         updatedAt: faker.date.recent().toDateString(),
     },
     {
-        id: faker.datatype.string(7),
+        id: faker.datatype.uuid(),
         title: faker.name.jobType(),
         employerTitle: faker.company.companyName(),
         updatedAt: faker.date.recent().toDateString(),
     },
     {
-        id: faker.datatype.string(7),
+        id: faker.datatype.uuid(),
         title: faker.name.jobType(),
         employerTitle: faker.company.companyName(),
         updatedAt: faker.date.recent().toDateString(),
     },
     {
-        id: faker.datatype.string(7),
+        id: faker.datatype.uuid(),
         title: faker.name.jobType(),
         employerTitle: faker.company.companyName(),
         updatedAt: faker.date.recent().toDateString(),
     },
     {
-        id: faker.datatype.string(7),
+        id: faker.datatype.uuid(),
         title: faker.name.jobType(),
         employerTitle: faker.company.companyName(),
         updatedAt: faker.date.recent().toDateString(),
     },
 ]
 
-const fakeFetch = () =>
+const fakeFetch = (waitTime: number) =>
     new Promise((resolve) => {
         setTimeout(() => {
             resolve('done')
-        }, 2000)
+        }, waitTime)
     })
 
 export const JobList = () => {
     const router = useRouter()
     const [isLoading, setLoading] = useState(false)
     const [jobs, setJobs] = useState<JobItemType[]>([])
+    const [currentPage, setPage] = useState('1')
 
     const fetchJobs = async () => {
         try {
             setLoading(true)
-            await fakeFetch()
+            await fakeFetch(2000)
             setJobs(FAKE_JOBS)
         } catch (err) {
         } finally {
@@ -66,14 +68,22 @@ export const JobList = () => {
     }
 
     useEffect(() => {
-        // if router.isReady
+        if (router.query.page) {
+            setPage(router.query.page as string)
+        }
+
         console.log('fetching jobs...')
-        console.log(router.query.page ?? 0)
         fetchJobs()
     }, [router.query.page])
 
+    const handlePaginate = (direction: 'previous' | 'next', currentPage: string): void => {
+        const numericCurrentPage = Number(currentPage)
+        const NEW_PAGE = direction === 'previous' ? numericCurrentPage - 1 : Number(currentPage) + 1
+        router.push(`/?page=${NEW_PAGE}`, undefined, { shallow: true })
+    }
+
     return (
-        <div className="relative">
+        <div>
             {isLoading && (
                 <Loader>
                     <>
@@ -89,16 +99,34 @@ export const JobList = () => {
                     </>
                 </Loader>
             )}
-            {!isLoading &&
-                jobs.map(({ id, title, employerTitle, updatedAt }) => (
-                    <JobItem
-                        key={id}
-                        id={id}
-                        title={title}
-                        employerTitle={employerTitle}
-                        updatedAt={updatedAt}
+            <div>
+                {!isLoading &&
+                    jobs.map(({ id, title, employerTitle, updatedAt }) => (
+                        <JobItem
+                            key={id}
+                            id={id}
+                            title={title}
+                            employerTitle={employerTitle}
+                            updatedAt={updatedAt}
+                        />
+                    ))}
+            </div>
+            <div className="flex flex-row justify-between mt-5">
+                <div>Page {currentPage} of 15</div>
+                <div className="grid grid-flow-col gap-5">
+                    <Button
+                        type="secondary"
+                        title="Previous"
+                        onClick={() => handlePaginate('previous', currentPage)}
+                        disabled={currentPage < '2'}
                     />
-                ))}
+                    <Button
+                        type="secondary"
+                        title="Next"
+                        onClick={() => handlePaginate('next', currentPage)}
+                    />
+                </div>
+            </div>
         </div>
     )
 }

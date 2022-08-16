@@ -1,14 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import logo from '../public/work-hays-logo.svg'
-import Button from '@/components/Button'
+import { Button } from '@/components/Button'
+import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import { MobileMenu } from '@/components/MobileMenu'
+import { useRouter } from 'next/router'
 
 const Navbar = () => {
-    const [isSignedIn] = useState<boolean>(false)
+    const router = useRouter()
+    const [isSignedIn] = useState(false)
+    const [isMobileMenuVisible, setMobileMenu] = useState(false)
+
+    useEffect(() => {
+        setMobileMenu(false)
+    }, [router.pathname])
+
     return (
         <>
-            <div className="bg-gray-100 border-b border-gray-200">
+            <div className="bg-gray-100 border-b border-gray-200 hidden md:block">
                 <div className="max-w-4xl mx-auto px-5 py-1 text-sm flex flex-row justify-end text-black divide-gray-200">
                     {isSignedIn && (
                         <Link href="/admin/dashboard">
@@ -30,7 +40,7 @@ const Navbar = () => {
                 </div>
             </div>
             <nav className="sticky top-0 left-0 z-20 w-full">
-                <div className="w-full border-b-2 border-gray-200 bg-white bg-opacity-60 backdrop-filter backdrop-blur-md">
+                <div className="w-full border-b-2 border-gray-200 bg-white bg-opacity-60 backdrop-filter backdrop-blur-md py-2 md:py-0">
                     <div className="max-w-4xl mx-auto flex flex-row items-center justify-between px-5">
                         <div className="flex flex-row space-x-12">
                             <Link href="/">
@@ -63,15 +73,28 @@ const Navbar = () => {
                                 </Link>
                             </div>
                         </div>
-                        <Link href="/admin/#/jobs/new">
-                            {/* <a className="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-5 py-2 hidden md:block text-sm transition-all">
-                                Post Your Job
-                            </a> */}
-                            <a>
-                                <Button title="Post Your Job" />
-                            </a>
-                        </Link>
+                        <div className="block md:hidden">
+                            <Button
+                                onClick={() => setMobileMenu((current) => !current)}
+                                type="primary"
+                                icon={
+                                    isMobileMenuVisible ? (
+                                        <XIcon className="w-5 h-5 text-white" />
+                                    ) : (
+                                        <MenuIcon className="w-5 h-5 text-white transform rotate-180" />
+                                    )
+                                }
+                            />
+                        </div>
+                        <div className="hidden md:block">
+                            <Link href="/admin/#/jobs/new">
+                                <a>
+                                    <Button title="Post Your Job" type="primary" />
+                                </a>
+                            </Link>
+                        </div>
                     </div>
+                    <MobileMenu visible={isMobileMenuVisible} isSignedIn={isSignedIn} />
                 </div>
             </nav>
         </>

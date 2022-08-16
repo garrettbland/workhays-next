@@ -1,23 +1,47 @@
-import { useState, FormEvent } from 'react'
+import { useState, FormEvent, useEffect } from 'react'
 import { PageTitle } from '@/components/PageTitle'
 import Callout from '@/components/Callout'
 import Link from 'next/link'
-import { QuestionMarkCircleIcon, ExclamationCircleIcon } from '@heroicons/react/outline'
-import Button from '@/components/Button'
+import { QuestionMarkCircleIcon, ExclamationCircleIcon, MailIcon } from '@heroicons/react/outline'
+import { Button } from '@/components/Button'
+import { isEmailValid } from '@/utils/email'
 
-type Status = 'idle' | 'loading' | 'completed' | 'error'
+type FormStatuses = 'idle' | 'loading' | 'complete' | 'error' | 'invalid_email'
 
 const SignIn = () => {
-    const [status, setStatus] = useState<Status>('idle')
+    const [status, setStatus] = useState<FormStatuses>('idle')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const submitForm = (event: FormEvent): void => {
+    const fakeFetch = (waitTime: number) =>
+        new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('done')
+            }, waitTime)
+        })
+
+    useEffect(() => {
+        if (status === 'complete') {
+            setEmail('')
+            setPassword('')
+        }
+    }, [status])
+
+    const submitForm = async (event: FormEvent) => {
         event.preventDefault()
-        setStatus('loading')
-        setEmail('')
-        setPassword('')
-        alert('logged in...')
+        try {
+            setStatus('loading')
+
+            if (!isEmailValid(email)) {
+                setStatus('invalid_email')
+                return
+            }
+
+            await fakeFetch(2000)
+            setStatus('complete')
+        } catch (err) {
+            setStatus('error')
+        }
     }
 
     return (
@@ -33,6 +57,11 @@ const SignIn = () => {
                 </Link>{' '}
                 to register as an employer for free.
             </Callout>
+            {status === 'invalid_email' && (
+                <Callout type="warning" icon={<MailIcon className="h-6 w-6" />}>
+                    Email address invalid, please try again.
+                </Callout>
+            )}
             {status === 'error' && (
                 <Callout type="warning" icon={<ExclamationCircleIcon className="h-6 w-6" />}>
                     There was an error signing in, please try again.
@@ -48,6 +77,7 @@ const SignIn = () => {
                             placeholder="Email"
                             type="email"
                             className="block w-full md:w-1/2"
+                            required
                         />
                         <input
                             onChange={(e) => setPassword(e.target.value)}
@@ -56,10 +86,13 @@ const SignIn = () => {
                             placeholder="Password"
                             type="password"
                             className="block w-full md:w-1/2"
+                            required
                         />
                         <Button
                             title={status === 'loading' ? 'Loading...' : 'Sign In'}
-                            type="submit"
+                            buttonType="submit"
+                            type="primary"
+                            loading={status === 'loading'}
                         />
                     </div>
                 </form>
