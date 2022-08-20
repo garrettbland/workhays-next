@@ -39,7 +39,7 @@ const Navbar = () => {
                     )}
                 </div>
             </div>
-            <nav className="sticky top-0 left-0 z-20 w-full">
+            <nav className="fixed md:sticky top-0 left-0 z-20 w-full">
                 <div className="w-full border-b-2 border-gray-200 bg-white bg-opacity-60 backdrop-filter backdrop-blur-md py-2 md:py-0">
                     <div className="max-w-4xl mx-auto flex flex-row items-center justify-between px-5">
                         <div className="flex flex-row space-x-12">

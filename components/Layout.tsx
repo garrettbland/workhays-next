@@ -10,7 +10,9 @@ export const Layout = ({ children }: LayoutProps) => {
     return (
         <>
             <Navbar />
-            <main className="max-w-4xl mx-auto px-5 py-14 relative z-10">{children}</main>
+            <main className="max-w-4xl mx-auto px-5 pt-24 pb-14 md:py-14 relative z-10">
+                {children}
+            </main>
             <Footer />
         </>
     )
