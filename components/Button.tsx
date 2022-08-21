@@ -17,6 +17,9 @@ const BASE_STYLES = `
     py-2 
     disabled:opacity-75 
     disabled:cursor-not-allowed
+    w-full
+    md:w-auto
+    justify-center
 `
 
 const generateClassNames = (type: ButtonTypes) => {

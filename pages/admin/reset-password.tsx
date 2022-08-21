@@ -1,17 +1,15 @@
 import { useState, FormEvent, useEffect } from 'react'
 import { PageTitle } from '@/components/PageTitle'
 import Callout from '@/components/Callout'
-import Link from 'next/link'
-import { QuestionMarkCircleIcon, ExclamationCircleIcon, MailIcon } from '@heroicons/react/outline'
+import { ExclamationCircleIcon, MailIcon } from '@heroicons/react/outline'
 import { Button } from '@/components/Button'
 import { isEmailValid } from '@/utils/email'
 
 type FormStatuses = 'idle' | 'loading' | 'complete' | 'error' | 'invalid_email'
 
-const SignIn = () => {
+const ResetPassword = () => {
     const [status, setStatus] = useState<FormStatuses>('idle')
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
 
     const fakeFetch = (waitTime: number) =>
         new Promise((resolve) => {
@@ -23,7 +21,6 @@ const SignIn = () => {
     useEffect(() => {
         if (status === 'complete') {
             setEmail('')
-            setPassword('')
         }
     }, [status])
 
@@ -47,16 +44,9 @@ const SignIn = () => {
     return (
         <>
             <PageTitle
-                title="Sign In"
-                description="Sign in to Work Hays to manage your job openings and events."
+                title="Reset Password"
+                description="Enter your email below and we will email you a special link to set a new password."
             />
-            <Callout type="info" icon={<QuestionMarkCircleIcon className="h-6 w-6" />}>
-                Don't have an account yet?{' '}
-                <Link href="/admin/register">
-                    <a>Click here</a>
-                </Link>{' '}
-                to register as an employer for free.
-            </Callout>
             {status === 'invalid_email' && (
                 <Callout type="warning" icon={<MailIcon className="h-6 w-6" />}>
                     Email address invalid, please try again.
@@ -68,7 +58,7 @@ const SignIn = () => {
                 </Callout>
             )}
             <section>
-                <form name="sign-in" onSubmit={submitForm}>
+                <form name="reset-password" onSubmit={submitForm}>
                     <div className="space-y-5">
                         <input
                             onChange={(e) => setEmail(e.target.value)}
@@ -79,26 +69,12 @@ const SignIn = () => {
                             className="block w-full md:w-1/2"
                             required
                         />
-                        <input
-                            onChange={(e) => setPassword(e.target.value)}
-                            value={password}
-                            name="password"
-                            placeholder="Password"
-                            type="password"
-                            className="block w-full md:w-1/2"
-                            required
+                        <Button
+                            title={status === 'loading' ? 'Loading...' : 'Reset My Password'}
+                            buttonType="submit"
+                            type="primary"
+                            loading={status === 'loading'}
                         />
-                        <div className="flex flex-col md:flex-row items-center space-x-5">
-                            <Button
-                                title={status === 'loading' ? 'Loading...' : 'Sign In'}
-                                buttonType="submit"
-                                type="primary"
-                                loading={status === 'loading'}
-                            />
-                            <Link href={`/admin/reset-password`}>
-                                <a className="text-sm hover:underline">Forgot your password?</a>
-                            </Link>
-                        </div>
                     </div>
                 </form>
             </section>
@@ -106,4 +82,4 @@ const SignIn = () => {
     )
 }
 
-export default SignIn
+export default ResetPassword
