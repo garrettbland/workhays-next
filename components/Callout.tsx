@@ -1,8 +1,8 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 type CalloutTypes = 'success' | 'warning' | 'info' | 'default'
 interface CalloutProps {
-    type: CalloutTypes
+    type?: CalloutTypes
     icon?: ReactNode
     children: string | ReactNode
 }
@@ -28,6 +28,17 @@ const generateClasses = (calloutType: CalloutTypes): string => {
 }
 
 const Callout = ({ type = 'default', icon, children }: CalloutProps) => {
+    /**
+     * Scroll to top of page when callout is shown
+     */
+    useEffect(() => {
+        window.scroll({
+            top: 0,
+            left: 0,
+            behavior: 'auto',
+        })
+    }, [])
+
     return (
         <p
             className={`px-3 py-1 flex flex-row items-start md:items-center space-x-2 rounded border mb-6 ${generateClasses(
