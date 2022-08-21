@@ -18,7 +18,8 @@
         "paths": {
             "@/components/*": ["components/*"],
             "@/utils/*": ["utils/*"],
-            "@/types": ["types.ts"]
+            "@/types": ["types.ts"],
+            "@/firebase": ["firebase/index.ts"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
