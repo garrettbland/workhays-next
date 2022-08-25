@@ -30,11 +30,11 @@ export const footerLinks = [
     },
     {
         title: 'Employer Sign In',
-        href: '#',
+        href: '/admin/sign-in',
     },
     {
         title: 'Employer Registration',
-        href: '#',
+        href: '/admin/register',
     },
     {
         title: 'Privacy',

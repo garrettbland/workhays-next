@@ -10,7 +10,15 @@ import { Loader } from '@/components/Loader'
 import { useRouter } from 'next/router'
 import { Button } from '@/components/Button'
 import { database } from '@/firebase'
-import { query, collection, getDocs, startAfter, limit, DocumentData } from 'firebase/firestore'
+import {
+    query,
+    collection,
+    getDocs,
+    startAfter,
+    limit,
+    DocumentData,
+    orderBy,
+} from 'firebase/firestore'
 
 // const FAKE_JOBS: JobItemType[] = [
 //     {
@@ -55,11 +63,12 @@ import { query, collection, getDocs, startAfter, limit, DocumentData } from 'fir
 export const JobList = () => {
     const router = useRouter()
     const [isLoading, setLoading] = useState(false)
-    const [jobs, setJobs] = useState<JobItemType[]>([])
-    const [currentPage, setPage] = useState('1')
-    const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
+    const [allJobs, setJobs] = useState<JobItemType[]>([])
+    // const [currentPage, setPage] = useState('1')
 
-    const fetchJobs = async (lastVisibleRecord?: DocumentData) => {
+    const [lastVisible, setLastVisible] = useState<string | undefined>()
+
+    const fetchJobs = async (cursor?: string) => {
         try {
             setLoading(true)
 
@@ -68,15 +77,22 @@ export const JobList = () => {
             /**
              * NOT WORKING CORRECTLY...
              */
-            if (lastVisibleRecord) {
-                console.log(lastVisibleRecord)
+            if (cursor) {
+                console.log('last visible yes')
+                console.log(lastVisible)
                 jobsCollectionQuery = query(
                     collection(database, 'jobs'),
-                    startAfter(lastVisibleRecord),
+                    orderBy('updatedAt', 'desc'),
+                    startAfter(cursor),
                     limit(1)
                 )
             } else {
-                jobsCollectionQuery = query(collection(database, 'jobs'), limit(1))
+                console.log('last visible no')
+                jobsCollectionQuery = query(
+                    collection(database, 'jobs'),
+                    orderBy('updatedAt', 'desc'),
+                    limit(1)
+                )
             }
 
             const jobsSnapshot = await getDocs(jobsCollectionQuery)
@@ -89,8 +105,9 @@ export const JobList = () => {
                     updatedAt: job.updatedAt,
                 }
             })
-            setLastVisible(jobs[jobs.length - 1])
-            setJobs(jobs)
+            const lastVisibleEntry = jobs[jobs.length - 1].updatedAt
+            setLastVisible(lastVisibleEntry)
+            setJobs((current) => [...current, ...jobs])
         } catch (err) {
         } finally {
             setLoading(false)
@@ -98,24 +115,46 @@ export const JobList = () => {
     }
 
     useEffect(() => {
-        if (router.query.page) {
-            setPage(router.query.page as string)
-        }
-
-        if (lastVisible) {
-            fetchJobs(lastVisible)
-        }
         fetchJobs()
-    }, [router.query.page])
+    }, [])
 
-    const handlePaginate = (direction: 'previous' | 'next', currentPage: string): void => {
-        const numericCurrentPage = Number(currentPage)
-        const NEW_PAGE = direction === 'previous' ? numericCurrentPage - 1 : Number(currentPage) + 1
-        router.push(`/?page=${NEW_PAGE}`, undefined, { shallow: true })
+    // useEffect(() => {
+    //     if (router.query.page) {
+    //         setPage(router.query.page as string)
+    //     }
+
+    //     if (lastVisible) {
+    //         fetchJobs(lastVisible)
+    //     }
+    //     fetchJobs()
+    // }, [router.query.page])
+
+    const handleLoadMore = () => {
+        fetchJobs(lastVisible)
+        // router.push(`/?cursor=${lastVisible}`, undefined, { shallow: true })
     }
+
+    // const handlePaginate = (direction: 'previous' | 'next', currentPage: string): void => {
+    //     const numericCurrentPage = Number(currentPage)
+    //     const NEW_PAGE = direction === 'previous' ? numericCurrentPage - 1 : Number(currentPage) + 1
+    //     //setPage(NEW_PAGE)
+    //     //router.push(`/?page=${NEW_PAGE}`, undefined, { shallow: true })
+    // }
 
     return (
         <div>
+            <div>
+                {allJobs.length !== 0 &&
+                    allJobs.map(({ id, title, employerTitle, updatedAt }) => (
+                        <JobItem
+                            key={id}
+                            id={id}
+                            title={title}
+                            employerTitle={employerTitle}
+                            updatedAt={updatedAt}
+                        />
+                    ))}
+            </div>
             {isLoading && (
                 <Loader>
                     <>
@@ -131,34 +170,16 @@ export const JobList = () => {
                     </>
                 </Loader>
             )}
-            <div>
-                {!isLoading &&
-                    jobs.map(({ id, title, employerTitle, updatedAt }) => (
-                        <JobItem
-                            key={id}
-                            id={id}
-                            title={title}
-                            employerTitle={employerTitle}
-                            updatedAt={updatedAt}
-                        />
-                    ))}
-            </div>
             <div className="flex flex-row justify-between mt-5">
-                <div>
-                    Page {currentPage} of 15 {JSON.stringify(lastVisible)}
-                </div>
+                <div>Page //</div>
                 <div className="grid grid-flow-col gap-5">
-                    <Button
+                    {/* <Button
                         type="secondary"
                         title="Previous"
                         onClick={() => handlePaginate('previous', currentPage)}
                         disabled={currentPage < '2'}
-                    />
-                    <Button
-                        type="secondary"
-                        title="Next"
-                        onClick={() => handlePaginate('next', currentPage)}
-                    />
+                    /> */}
+                    <Button type="secondary" title="Load More" onClick={handleLoadMore} />
                 </div>
             </div>
         </div>
