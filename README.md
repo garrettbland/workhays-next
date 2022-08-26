@@ -16,6 +16,7 @@ Work Hays is built with a handful of different technologies mainly centered arou
 
 -   [Next.js](https://nextjs.org/)
 -   [Tailwind CSS](https://tailwindcss.com/)
+-   [Supabase](https://supabase.com/)
 
 ## Getting Started
 
@@ -45,7 +46,14 @@ npm install
 
 If you haven't already, please make sure you have followed the steps above.
 
-1. Open up a terminal and navigate to the `workhays-next` directory and run the following
+1. Add the necessary environment variables to `.env.local`. These can be found in the Supabase Settings
+
+```
+NEXT_PUBLIC_SUPABASE_URL=""
+NEXT_PUBLIC_SUPABASE_ANON_KEY=""
+```
+
+2. Open up a terminal and navigate to the `workhays-next` directory and run the following
 
 ```
 npm run dev
