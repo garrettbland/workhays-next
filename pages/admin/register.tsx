@@ -140,7 +140,7 @@ export const Register = () => {
                             <span className="bg-gradient-to-r from-white to-transparent w-48 h-3 inline-block"></span>
                             <span className="pl-2 text-sm block antialiased text-gray-700">
                                 This information <span className="font-bold">is public</span> and
-                                will be shown publically.
+                                will be visible to anyone.
                             </span>
                         </div>
                         <input
@@ -185,7 +185,15 @@ export const Register = () => {
                     <p className="text-sm block antialiased text-gray-700 mb-6">
                         By submitting this form, you are automatically agreeing to our{' '}
                         <Link href={`/terms`}>
-                            <a className="underline">terms and conditions</a>
+                            <a className="underline" target={'_blank'}>
+                                terms and conditions
+                            </a>
+                        </Link>{' '}
+                        and understand our{' '}
+                        <Link href={`/privacy`}>
+                            <a className="underline" target={'_blank'}>
+                                privacy policy
+                            </a>
                         </Link>
                         . Once your form is submitted, please allow 1-2 business days before your
                         business is verified.

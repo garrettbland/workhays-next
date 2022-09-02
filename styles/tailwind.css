@@ -12,5 +12,5 @@ textarea {
 }
 
 .disabled {
-    @apply opacity-50 hover:cursor-not-allowed;
+    @apply opacity-25 hover:cursor-not-allowed;
 }
