@@ -88,7 +88,7 @@ const SignIn = () => {
                             className="block w-full md:w-1/2"
                             required
                         />
-                        <div className="flex flex-col md:flex-row items-center space-x-5">
+                        <div className="flex flex-col md:flex-row items-center space-x-5 space-y-5 md:space-y-0">
                             <Button
                                 title={status === 'loading' ? 'Loading...' : 'Sign In'}
                                 buttonType="submit"

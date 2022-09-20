@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { BookOpenIcon, CheckIcon, ExclamationCircleIcon, MailIcon } from '@heroicons/react/outline'
 import { Button } from '@/components/Button'
 import { isEmailValid } from '@/utils/email'
+import { supabase } from '@/supabase'
+import { ContactSubmissionForm } from '@/types'
 
 type FormStatuses = 'idle' | 'loading' | 'complete' | 'error' | 'invalid_email'
 
@@ -28,7 +30,7 @@ const fakeFetch = (waitTime: number) =>
  */
 const Contact = () => {
     const [status, setStatus] = useState<FormStatuses>('idle')
-    const [contactForm, setContactForm] = useState(DEFAULT_FORM_FIELDS)
+    const [contactForm, setContactForm] = useState<ContactSubmissionForm>(DEFAULT_FORM_FIELDS)
 
     const submitForm = async (event: FormEvent) => {
         event.preventDefault()
@@ -40,10 +42,19 @@ const Contact = () => {
                 return
             }
 
-            await fakeFetch(2000)
+            const { data, error } = await supabase
+                .from('submissions')
+                .insert([contactForm as ContactSubmissionForm])
+
+            if (error) {
+                setStatus('error')
+                return
+            }
+
+            console.log(data)
+
             setStatus('complete')
             setContactForm(DEFAULT_FORM_FIELDS)
-            alert(JSON.stringify(contactForm))
         } catch (err) {
             setStatus('error')
         }

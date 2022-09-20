@@ -62,7 +62,7 @@ export const JobList = () => {
 
     useEffect(() => {
         const shouldFetchTotalJobs = hasFetchedInitialJobCount.current === false
-
+        setJobs([])
         fetchJobs({
             page: (router.query.page as string) ?? '1',
             fetchTotalJobs: shouldFetchTotalJobs,
@@ -103,7 +103,7 @@ export const JobList = () => {
                     />
                 ))}
             </div>
-            <div className="flex flex-row justify-between mt-5">
+            <div className="flex flex-row justify-between mt-5 items-center">
                 <div>
                     Page {currentPage} of {totalPages ?? '...'}
                 </div>

@@ -80,12 +80,19 @@ export interface Subscriber {
     createdAt: string
 }
 
+/**
+ * Helper used for job items and job list components
+ */
+export type ContactSubmissionForm = Pick<
+    ContactSubmission,
+    'firstName' | 'lastName' | 'email' | 'business' | 'message'
+>
 export interface ContactSubmission {
     id: string
     firstName: string
     lastName: string
     email: string
-    phone: string
+    business: string
     message: string
     createdAt: string
     updatedAt: string
