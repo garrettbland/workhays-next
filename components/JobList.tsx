@@ -3,7 +3,7 @@
  * URL and query params to fetch new jobs. Handles pagination
  */
 import { JobItem } from '@/components/JobItem'
-import { JobItem as JobItemType } from '@/types'
+import { Employer, Job } from '@/types'
 import { useEffect, useState, useRef } from 'react'
 import { Loader } from '@/components/Loader'
 import { useRouter } from 'next/router'
@@ -15,7 +15,7 @@ export const JobList = () => {
     const router = useRouter()
     const [isLoading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState<number | null>(null)
-    const [jobs, setJobs] = useState<JobItemType[]>([])
+    const [jobs, setJobs] = useState<Job[]>([])
     const currentPage = router.query.page ?? '1'
     const hasFetchedInitialJobCount = useRef(false)
 
@@ -27,6 +27,7 @@ export const JobList = () => {
         fetchTotalJobs?: boolean
     }) => {
         setLoading(true)
+        setJobs([])
 
         const rangeStart = Number(page) * RESULTS_PER_PAGE - RESULTS_PER_PAGE
         const rangeEnd = rangeStart + RESULTS_PER_PAGE - 1
@@ -46,7 +47,9 @@ export const JobList = () => {
 
         const { data, error } = await supabase
             .from('jobs')
-            .select('*', { count: 'exact' })
+            .select(`title, updatedAt, status, expiresAt, id, employer:employers ( title )`, {
+                count: 'exact',
+            })
             .order('updatedAt')
             .range(rangeStart, rangeEnd)
 
@@ -61,13 +64,15 @@ export const JobList = () => {
     }
 
     useEffect(() => {
-        const shouldFetchTotalJobs = hasFetchedInitialJobCount.current === false
-        setJobs([])
-        fetchJobs({
-            page: (router.query.page as string) ?? '1',
-            fetchTotalJobs: shouldFetchTotalJobs,
-        })
-    }, [router.query.page])
+        if (router.isReady) {
+            const shouldFetchTotalJobs = hasFetchedInitialJobCount.current === false
+
+            fetchJobs({
+                page: (router.query.page as string) ?? '1',
+                fetchTotalJobs: shouldFetchTotalJobs,
+            })
+        }
+    }, [router.isReady, router.query.page])
 
     const handlePaginate = (direction: 'previous' | 'next', currentPage: string): void => {
         const numericCurrentPage = Number(currentPage)
@@ -85,7 +90,7 @@ export const JobList = () => {
                                 key={index}
                                 id={''}
                                 title={''}
-                                employerTitle={''}
+                                employer={{ title: '' } as Employer}
                                 updatedAt={''}
                             />
                         ))}
@@ -93,12 +98,12 @@ export const JobList = () => {
                 </Loader>
             )}
             <div>
-                {jobs.map(({ id, title, employerTitle = 'n/a', updatedAt }) => (
+                {jobs.map(({ id, title, employer, updatedAt }) => (
                     <JobItem
                         key={id}
                         id={id}
                         title={title}
-                        employerTitle={employerTitle}
+                        employer={employer}
                         updatedAt={updatedAt}
                     />
                 ))}

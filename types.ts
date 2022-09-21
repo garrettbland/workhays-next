@@ -24,23 +24,17 @@ export enum Industries {
 export interface Job {
     id: string
     employerId: string
-    employerTitle: string
+    employer?: Employer
     title: string
     status: 'active' | 'inactive' | 'archived' | 'deleted'
     type: 'fullTime' | 'partTime' | 'seasonal'
     industry: Industries
     description?: string
     applicationLink?: string
-    promoted: boolean
     expiresAt: string
     createdAt: string
     updatedAt: string
 }
-
-/**
- * Helper used for job items and job list components
- */
-export type JobItem = Pick<Job, 'id' | 'title' | 'employerTitle' | 'updatedAt'>
 
 export interface Employer {
     id: string
@@ -104,20 +98,4 @@ export interface JobMetric {
     device: 'mobile' | 'tablet' | 'desktop'
     promotedClick: boolean
     createdAt: string
-}
-
-export interface BannerAd {
-    id: string
-    title: string
-    description: string
-    backgroundImage: string
-    button: {
-        title: string
-        destinationUrl: string
-        backgroundColor: string
-        textColor: string
-    }
-    expiresAt: string
-    createdAt: string
-    updatedAt: string
 }
