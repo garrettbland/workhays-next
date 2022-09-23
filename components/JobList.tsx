@@ -47,9 +47,11 @@ export const JobList = () => {
 
         const { data, error } = await supabase
             .from('jobs')
-            .select(`title, updatedAt, status, expiresAt, id, employer:employers ( title )`, {
+            .select(`title, updatedAt, status, id, employer:employers!inner ( title, status )`, {
                 count: 'exact',
             })
+            .eq('status', 'active')
+            .eq('employer.status', 'active')
             .order('updatedAt')
             .range(rangeStart, rangeEnd)
 

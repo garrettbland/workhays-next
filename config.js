@@ -1,6 +1,6 @@
 export const version = '0.0.1'
 
-export const RESULTS_PER_PAGE = 2
+export const RESULTS_PER_PAGE = 10
 
 export const navbarLinks = [
     {
