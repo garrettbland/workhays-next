@@ -27,18 +27,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         const jobId = context.params?.id
 
+        /**
+         * Fetch job from database by id in request URL.
+         * `.single` modifier is used to return only single record
+         * object, else error is thrown.
+         */
         const { data, error } = await supabase
             .from('jobs')
             .select()
             .eq('id', jobId)
             .eq('status', 'active')
             .limit(1)
+            .single()
 
         if (error) throw Error('Error retrieving data')
 
         return {
             props: {
-                job: data[0],
+                job: data,
             },
         }
     } catch (err) {
