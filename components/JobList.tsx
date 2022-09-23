@@ -2,7 +2,7 @@
  * Component that is responsible for fetching jobs. Watches
  * URL and query params to fetch new jobs. Handles pagination
  */
-import { JobItem } from '@/components/JobItem'
+import { JobItem } from '@/components/JobListItem'
 import { Employer, Job } from '@/types'
 import { useEffect, useState, useRef } from 'react'
 import { Loader } from '@/components/Loader'
