@@ -45,8 +45,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             .limit(1)
             .single()
 
-        console.log(data)
-
         if (error) throw Error('Error retrieving data')
 
         return {

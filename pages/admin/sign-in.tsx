@@ -5,20 +5,16 @@ import Link from 'next/link'
 import { QuestionMarkCircleIcon, ExclamationCircleIcon, MailIcon } from '@heroicons/react/outline'
 import { Button } from '@/components/Button'
 import { isEmailValid } from '@/utils/email'
+import { supabase } from '@/supabase'
+import { useRouter } from 'next/router'
 
-type FormStatuses = 'idle' | 'loading' | 'complete' | 'error' | 'invalid_email'
+type FormStatuses = 'idle' | 'loading' | 'complete' | 'error' | 'invalid_email' | 'invalid_login'
 
 const SignIn = () => {
+    const { push } = useRouter()
     const [status, setStatus] = useState<FormStatuses>('idle')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
-    const fakeFetch = (waitTime: number) =>
-        new Promise((resolve) => {
-            setTimeout(() => {
-                resolve('done')
-            }, waitTime)
-        })
 
     useEffect(() => {
         if (status === 'complete') {
@@ -32,15 +28,26 @@ const SignIn = () => {
         try {
             setStatus('loading')
 
+            if (!isEmailValid) throw Error('invalid_email')
+
             if (!isEmailValid(email)) {
                 setStatus('invalid_email')
                 return
             }
 
-            await fakeFetch(2000)
+            const { error } = await supabase.auth.signIn({ email: email, password: password })
+
+            if (error) throw Error('invalid_login')
+
             setStatus('complete')
-        } catch (err) {
-            setStatus('error')
+            push('/admin/dashboard')
+        } catch (error) {
+            console.log(error)
+            let message: FormStatuses = 'error'
+            if (error instanceof Error) {
+                message = error.message as FormStatuses
+            }
+            setStatus(message)
         }
     }
 
@@ -60,6 +67,11 @@ const SignIn = () => {
             {status === 'invalid_email' && (
                 <Callout type="warning" icon={<MailIcon className="h-6 w-6" />}>
                     Email address invalid, please try again.
+                </Callout>
+            )}
+            {status === 'invalid_login' && (
+                <Callout type="warning" icon={<MailIcon className="h-6 w-6" />}>
+                    Email or password is incorrect, please try again.
                 </Callout>
             )}
             {status === 'error' && (
