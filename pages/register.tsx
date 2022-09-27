@@ -3,7 +3,7 @@ import { PageTitle } from '@/components/PageTitle'
 import Callout from '@/components/Callout'
 import { Button } from '@/components/Button'
 import Link from 'next/link'
-import { BookOpenIcon, CheckIcon, ExclamationCircleIcon, MailIcon } from '@heroicons/react/outline'
+import { CheckIcon, ExclamationCircleIcon, MailIcon } from '@heroicons/react/outline'
 import { isEmailValid } from '@/utils/email'
 
 const DEFAULT_FORM_FIELDS = {

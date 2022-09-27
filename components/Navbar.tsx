@@ -27,12 +27,12 @@ const Navbar = () => {
                     )}
                     {!isSignedIn && (
                         <>
-                            <Link href="/admin/register">
+                            <Link href="/register">
                                 <a className="antialiased hover:underline px-4">
                                     Employer Registration
                                 </a>
                             </Link>
-                            <Link href="/admin/sign-in">
+                            <Link href="/sign-in">
                                 <a className="antialiased hover:underline px-4">Sign In</a>
                             </Link>
                         </>

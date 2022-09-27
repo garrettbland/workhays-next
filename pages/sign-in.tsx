@@ -59,7 +59,7 @@ const SignIn = () => {
             />
             <Callout type="info" icon={<QuestionMarkCircleIcon className="h-6 w-6" />}>
                 Don't have an account yet?{' '}
-                <Link href="/admin/register">
+                <Link href="/register">
                     <a>Click here</a>
                 </Link>{' '}
                 to register as an employer for free.
@@ -107,7 +107,7 @@ const SignIn = () => {
                                 type="primary"
                                 loading={status === 'loading'}
                             />
-                            <Link href={`/admin/reset-password`}>
+                            <Link href={`/reset-password`}>
                                 <a className="text-sm hover:underline">Forgot your password?</a>
                             </Link>
                         </div>
