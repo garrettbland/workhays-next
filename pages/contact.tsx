@@ -1,10 +1,12 @@
 import { useState, FormEvent, ChangeEvent } from 'react'
-import PageTitle from '@/components/PageTitle'
+import { PageTitle } from '@/components/PageTitle'
 import Callout from '@/components/Callout'
 import Link from 'next/link'
 import { BookOpenIcon, CheckIcon, ExclamationCircleIcon, MailIcon } from '@heroicons/react/outline'
-import Button from '@/components/Button'
+import { Button } from '@/components/Button'
 import { isEmailValid } from '@/utils/email'
+import { supabase } from '@/supabase'
+import { ContactSubmissionForm } from '@/types'
 
 type FormStatuses = 'idle' | 'loading' | 'complete' | 'error' | 'invalid_email'
 
@@ -16,22 +18,45 @@ const DEFAULT_FORM_FIELDS = {
     message: '',
 }
 
+const fakeFetch = (waitTime: number) =>
+    new Promise((resolve) => {
+        setTimeout(() => {
+            resolve('done')
+        }, waitTime)
+    })
+
 /**
  * This is a function that does something
  */
 const Contact = () => {
     const [status, setStatus] = useState<FormStatuses>('idle')
-    const [contactForm, setContactForm] = useState(DEFAULT_FORM_FIELDS)
+    const [contactForm, setContactForm] = useState<ContactSubmissionForm>(DEFAULT_FORM_FIELDS)
 
-    const submitForm = (event: FormEvent): void => {
+    const submitForm = async (event: FormEvent) => {
         event.preventDefault()
-        setStatus('loading')
-        if (isEmailValid(contactForm.email)) {
-            setContactForm(DEFAULT_FORM_FIELDS)
+        try {
+            setStatus('loading')
+
+            if (!isEmailValid(contactForm.email)) {
+                setStatus('invalid_email')
+                return
+            }
+
+            const { data, error } = await supabase
+                .from('submissions')
+                .insert([contactForm as ContactSubmissionForm])
+
+            if (error) {
+                setStatus('error')
+                return
+            }
+
+            console.log(data)
+
             setStatus('complete')
-            alert(JSON.stringify(contactForm))
-        } else {
-            setStatus('invalid_email')
+            setContactForm(DEFAULT_FORM_FIELDS)
+        } catch (err) {
+            setStatus('error')
         }
     }
 
@@ -65,7 +90,7 @@ const Contact = () => {
             )}
             {status === 'invalid_email' && (
                 <Callout type="warning" icon={<MailIcon className="h-6 w-6" />}>
-                    Error. Please provide a valid email address.
+                    Form not submitted, please provide a valid email address.
                 </Callout>
             )}
             {status === 'complete' && (
@@ -82,6 +107,7 @@ const Contact = () => {
                             name="first"
                             placeholder="First Name"
                             type="text"
+                            required
                         />
                         <input
                             onChange={(e) => updateForm(e, 'lastName')}
@@ -89,6 +115,7 @@ const Contact = () => {
                             name="last"
                             placeholder="Last Name"
                             type="text"
+                            required
                         />
                         <input
                             onChange={(e) => updateForm(e, 'email')}
@@ -96,6 +123,7 @@ const Contact = () => {
                             name="email"
                             placeholder="Email"
                             type="email"
+                            required
                         />
                         <input
                             onChange={(e) => updateForm(e, 'business')}
@@ -110,9 +138,15 @@ const Contact = () => {
                             className="col-span-1 md:col-span-2"
                             placeholder="Your Message"
                             rows={5}
+                            required
                         ></textarea>
                     </div>
-                    <Button title={status === 'loading' ? 'Loading...' : 'Submit'} type="submit" />
+                    <Button
+                        type="primary"
+                        title={status === 'loading' ? 'Submitting...' : 'Submit'}
+                        buttonType="submit"
+                        loading={status === 'loading' ? true : false}
+                    />
                 </form>
             </section>
         </>

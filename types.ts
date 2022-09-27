@@ -9,32 +9,31 @@ export enum Industries {
     construction = 'construction',
     delivery = 'delivery',
     education = 'education',
-    food_servie = 'food_service',
+    foodServie = 'foodService',
     healthcare = 'healthcare',
     hospitality = 'hospitality',
     technology = 'technology',
     custodial = 'custodial',
     manufacturing = 'manufacturing',
     professional = 'professional',
-    real_estate = 'real_estate',
+    realEstate = 'realEstate',
     retail = 'retail',
     other = 'other',
 }
 
 export interface Job {
     id: string
-    employer_id: string
-    employer_title: string
+    employerId: string
+    employer?: Employer
     title: string
     status: 'active' | 'inactive' | 'archived' | 'deleted'
-    type: 'full_time' | 'part_time' | 'seasonal'
+    type: 'fullTime' | 'partTime' | 'seasonal'
     industry: Industries
     description?: string
-    application_link?: string
-    promoted: boolean
-    expires_at: string
-    created_at: string
-    updated_at: string
+    applicationLink?: string
+    expiresAt: string
+    createdAt: string
+    updatedAt: string
 }
 
 export interface Employer {
@@ -46,66 +45,57 @@ export interface Employer {
     email: string
     phone?: string
     users: {
-        user_id: string
+        userId: string
         role: 'admin' | 'member'
         owner: boolean
     }[]
-    logo_url?: string
-    website_url?: string
-    created_at: string
-    updated_at: string
+    logoUrl?: string
+    websiteUrl?: string
+    createdAt: string
+    updatedAt: string
 }
 
 export interface User {
     id: string
-    auth_uid: string
-    first_name: string
-    last_name: string
+    authUID: string
+    firstName: string
+    lastName: string
     email: string
     status: 'active' | 'disabled' | 'deleted'
-    role: 'user' | 'employer' | 'moderator' | 'admin' // role might be saved in Employer? is_admin?
-    created_at: string
-    updated_at: string
+    role: 'user' | 'employer' | 'moderator' | 'admin' // role might be saved in Employer? isAdmin?
+    createdAt: string
+    updatedAt: string
 }
 
 export interface Subscriber {
     id: string
     email: string
     status: 'active' | 'inactive'
-    created_at: string
+    createdAt: string
 }
 
+/**
+ * Helper used for job items and job list components
+ */
+export type ContactSubmissionForm = Pick<
+    ContactSubmission,
+    'firstName' | 'lastName' | 'email' | 'business' | 'message'
+>
 export interface ContactSubmission {
     id: string
-    first_name: string
-    last_name: string
+    firstName: string
+    lastName: string
     email: string
-    phone: string
+    business: string
     message: string
-    created_at: string
-    updated_at: string
+    createdAt: string
+    updatedAt: string
 }
 
 export interface JobMetric {
     id: string
-    job_id: string
+    jobId: string
     device: 'mobile' | 'tablet' | 'desktop'
-    promoted_click: boolean
-    created_at: string
-}
-
-export interface BannerAd {
-    id: string
-    title: string
-    description: string
-    background_image: string
-    button: {
-        title: string
-        destination_url: string
-        background_color: string
-        text_color: string
-    }
-    expires_at: string
-    created_at: string
-    updated_at: string
+    promotedClick: boolean
+    createdAt: string
 }

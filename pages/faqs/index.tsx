@@ -2,7 +2,7 @@ import matter from 'gray-matter'
 import fs from 'fs'
 import path from 'path'
 import Link from 'next/link'
-import PageTitle from '@/components/PageTitle'
+import { PageTitle } from '@/components/PageTitle'
 import { GetStaticProps } from 'next'
 
 interface FrequentlyAskedQuestionType {

@@ -1,4 +1,6 @@
-export const version = '1.0.0'
+export const version = '0.0.1'
+
+export const RESULTS_PER_PAGE = 10
 
 export const navbarLinks = [
     {
@@ -30,11 +32,11 @@ export const footerLinks = [
     },
     {
         title: 'Employer Sign In',
-        href: '#',
+        href: '/sign-in',
     },
     {
         title: 'Employer Registration',
-        href: '#',
+        href: '/register',
     },
     {
         title: 'Privacy',

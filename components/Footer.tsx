@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import logo from '../public/work-hays-logo.svg'
-import { version, footerLinks } from '../siteconfig.js'
+import { version, footerLinks } from '../config.js'
 
 const Footer = () => {
     return (
