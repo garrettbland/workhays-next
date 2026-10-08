@@ -6,21 +6,39 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "db:push": "supabase db push",
+    "db:types": "supabase gen types typescript --linked --schema public > src/lib/database.types.ts",
+    "db:test": "supabase test db",
+    "db:test:local": "./scripts/db-test-local.sh",
+    "migrate:legacy": "tsx scripts/migrate-legacy/index.ts",
+    "migrate:logos": "tsx scripts/migrate-legacy/upload-logos.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.3",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "sanitize-html": "^2.18.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sanitize-html": "^2.16.2",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
+    "mysql2": "^3.24.5",
+    "pg": "^8.23.1",
+    "supabase": "^2.120.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }
