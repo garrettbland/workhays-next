@@ -20,12 +20,12 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/sign-up"
+          <a
+            href="/post-a-job"
             className="bg-gold px-4 py-2.5 font-semibold text-white hover:bg-gold-dark hover:text-white"
           >
             Post a job, free
-          </Link>
+          </a>
         </nav>
       </div>
     </header>

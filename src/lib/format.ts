@@ -40,3 +40,8 @@ export function formatPay(min: number | null, max: number | null, period: string
   if (min != null && max != null && min !== max) return `${money.format(min)}–${money.format(max)}${p}`;
   return `${money.format((min ?? max)!)}${p}`;
 }
+
+/** True when a date is within `days` from now. Only call from request-time code. */
+export function isWithinDays(iso: string | null, days: number): boolean {
+  return !!iso && Date.parse(iso) < Date.now() + days * 86400_000;
+}
