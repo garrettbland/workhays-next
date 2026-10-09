@@ -7,7 +7,7 @@
  *
  * --dry-run     classify and report, write nothing
  * --replace     delete previously migrated Work Hays data first (safe to re-run against dev)
- * --decisions   CSV with columns email,decision (keep|drop) to override the automatic spam rules
+ * --decisions   CSV with columns email,decision (keep|drop); "drop" removes extra accounts (only verified accounts are ever migrated)
  *
  * Users keep their passwords: legacy bcrypt hashes ($2a$) are copied into auth.users,
  * which Supabase Auth verifies natively. Legacy UUIDs are preserved so old URLs keep working.
@@ -143,7 +143,8 @@ async function main() {
     const email = u.email?.trim().toLowerCase();
     let verdict: Verdict = classifyAccount(u, employer, jobCount);
     const override = email ? decisions.get(email) : undefined;
-    if (override && u.role !== "admin") verdict = override === "keep" ? "keep" : "drop";
+    // Overrides can only drop accounts; an unverified account is never brought over.
+    if (override === "drop" && u.role !== "admin") verdict = "drop";
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) verdict = "drop";
     if (verdict === "keep" && seenEmails.has(email!)) verdict = "duplicate";
     counts[verdict] = (counts[verdict] ?? 0) + 1;

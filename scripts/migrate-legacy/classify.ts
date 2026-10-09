@@ -51,18 +51,16 @@ export function looksLikeSpam(user: LegacyUser, employer?: LegacyEmployer): bool
 }
 
 /**
- * Same rules used for the production cleanup on 2026-10-08:
- *  - staff, anyone who has posted, and approved businesses with a name are kept (unless the name is spam with no jobs)
- *  - unapproved accounts with no business name are dropped
- *  - the in-between "review" group: obvious spam is dropped, the rest is kept as PENDING businesses,
- *    which still need moderator approval in the new system before anything is public.
+ * Only accounts that were approved ("verified") on the old site move over. Decided 2026-10-08:
+ * unverified users and their businesses are not migrated. They can sign up again on the new site,
+ * where new businesses go through moderator approval.
+ *  - staff are always kept
+ *  - verified accounts are kept unless they look like spam and never posted a job
+ *  - pending and locked accounts are dropped
  */
 export function classifyAccount(user: LegacyUser, employer: LegacyEmployer | undefined, jobCount: number): Decision {
   if (user.role === "admin" || user.role === "moderator") return "keep";
-  if (jobCount > 0) return "keep";
-  const hasName = !!employer?.title?.trim();
-  if (!hasName && user.status !== "verified") return "drop";
-  if (looksLikeSpam(user, employer)) return "drop";
-  if (user.status === "locked") return "drop";
+  if (user.status !== "verified") return "drop";
+  if (jobCount === 0 && looksLikeSpam(user, employer)) return "drop";
   return "keep";
 }
