@@ -4,7 +4,7 @@
  * 1. On the old server:  tar czf ~/uploads.tgz -C /path/to/workhays/public uploads/employers
  * 2. Copy it down and extract:  tar xzf uploads.tgz   (creates ./uploads/employers)
  * 3. Run:
- *    NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... \
+ *    NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SECRET_KEY=... \
  *    npx tsx scripts/migrate-legacy/upload-logos.ts ./uploads/employers
  *
  * Only files referenced by a migrated employer are uploaded; references to missing files are cleared.
@@ -19,7 +19,7 @@ if (!dir || !fs.existsSync(dir)) {
   process.exit(1);
 }
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SECRET_KEY!, {
   auth: { persistSession: false },
 });
 

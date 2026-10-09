@@ -8,7 +8,7 @@ import { serverEnv } from "@/lib/env.server";
  * (cron, webhooks, public form handlers after Turnstile verification).
  */
 export function createAdminClient() {
-  return createClient(publicEnv.NEXT_PUBLIC_SUPABASE_URL, serverEnv.SUPABASE_SERVICE_ROLE_KEY, {
+  return createClient(publicEnv.NEXT_PUBLIC_SUPABASE_URL, serverEnv.SUPABASE_SECRET_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }

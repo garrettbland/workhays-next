@@ -6,7 +6,7 @@ import { publicEnv } from "@/lib/env";
  * Safe inside `use cache` functions because it never reads the request.
  */
 export function createPublicClient() {
-  return createClient(publicEnv.NEXT_PUBLIC_SUPABASE_URL, publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
+  return createClient(publicEnv.NEXT_PUBLIC_SUPABASE_URL, publicEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
