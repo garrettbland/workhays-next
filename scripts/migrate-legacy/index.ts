@@ -156,7 +156,8 @@ async function main() {
 
   const keptUserIds = new Set(keptUsers.map((u) => u.id));
   const keptEmployers = employers.filter((e) => {
-    if (e.user_id === "unclaimed") return nonEmpty(e.title) !== null;
+    // Admin-created "unclaimed" listings are not migrated (decided 2026-10-12); their jobs stay behind too.
+    if (e.user_id === "unclaimed") return false;
     return keptUserIds.has(e.user_id) && (nonEmpty(e.title) !== null || (jobsByEmployer.get(e.id)?.length ?? 0) > 0);
   });
   const keptEmployerIds = new Set(keptEmployers.map((e) => e.id));
