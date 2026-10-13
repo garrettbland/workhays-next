@@ -8,6 +8,7 @@ import { getUser } from "@/lib/auth";
 import { sanitizeRichText, toPlainText } from "@/lib/sanitize";
 import { SITE } from "@/lib/site";
 import { notifyNewClaim, notifyNewEmployer, sendTeamInvite } from "@/lib/notify";
+import { plainToHtml, zonedIso } from "@/lib/events";
 import type { ActionState } from "@/components/ui/Form";
 
 /** Every action re-checks the session; row-level security in the database is the real gate. */
@@ -310,4 +311,58 @@ export async function respondToInvite(_: ActionState, form: FormData): Promise<A
   if (error) return { error: error.message };
   if (accept) redirect(`/dashboard/${employerId}?joined=1`);
   return { ok: "Invite declined. You won't be added to this team." };
+}
+
+// ---------------------------------------------------------------------------
+// Events (approved businesses publish directly; the database decides the status)
+// ---------------------------------------------------------------------------
+const employerEventSchema = z
+  .object({
+    title: z.string().trim().min(3, "Enter the event name").max(200),
+    date: z.iso.date({ message: "Choose the event date" }),
+    start_time: z.union([z.literal(""), z.string().regex(/^\d{2}:\d{2}$/)]),
+    end_time: z.union([z.literal(""), z.string().regex(/^\d{2}:\d{2}$/)]),
+    location_name: z.string().trim().min(2, "Where is it?").max(200),
+    address: z.string().trim().max(300),
+    event_url: url,
+    description: z.string().trim().min(10, "Add a short description").max(5000),
+  })
+  .refine((d) => !d.end_time || !d.start_time || d.end_time > d.start_time, { message: "The end time should be after the start time." });
+
+export async function createEvent(_: ActionState, form: FormData): Promise<ActionState> {
+  const { supabase } = await session();
+  const employerId = str(form, "employer_id");
+  const parsed = employerEventSchema.safeParse(
+    Object.fromEntries(["title", "date", "start_time", "end_time", "location_name", "address", "event_url", "description"].map((k) => [k, str(form, k)])),
+  );
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const d = parsed.data;
+  const { data, error } = await supabase
+    .from("events")
+    .insert({
+      site_id: SITE.id,
+      employer_id: employerId,
+      title: d.title,
+      description_html: plainToHtml(d.description),
+      starts_at: zonedIso(d.date, d.start_time),
+      ends_at: d.end_time ? zonedIso(d.date, d.end_time) : null,
+      all_day: !d.start_time,
+      location_name: d.location_name,
+      address: optional(d.address),
+      event_url: optional(d.event_url),
+      is_job_fair: form.get("is_job_fair") === "on",
+    })
+    .select("status")
+    .single();
+  if (error) return { error: "Couldn't save the event. Please try again." };
+  updateTag("events");
+  refresh();
+  return { ok: data.status === "approved" ? "Your event is posted." : "Saved. It will be posted once your business is approved." };
+}
+
+export async function deleteEvent(form: FormData): Promise<void> {
+  const { supabase } = await session();
+  await supabase.from("events").update({ deleted_at: new Date().toISOString() }).eq("id", str(form, "event_id"));
+  updateTag("events");
+  refresh();
 }

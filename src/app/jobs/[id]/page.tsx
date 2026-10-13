@@ -6,6 +6,7 @@ import { getIndustries, getJob, getLiveJobs, type JobDetail } from "@/lib/data";
 import { formatLongDate, formatPay, JOB_TYPE_LABELS, JOB_TYPE_SCHEMA } from "@/lib/format";
 import { sanitizeRichText, toPlainText } from "@/lib/sanitize";
 import { assetUrl, SITE } from "@/lib/site";
+import { EmployerLogo } from "@/components/EmployerLogo";
 
 export async function generateStaticParams() {
   const jobs = await getLiveJobs(SITE.id);
@@ -81,6 +82,7 @@ async function JobContent({ params }: Pick<PageProps<"/jobs/[id]">, "params">) {
 
       <aside className="flex flex-[1_1_280px] flex-col gap-6">
         <section className="border-[1.5px] border-ink p-6">
+          <div className="mb-3"><EmployerLogo src={assetUrl(job.employer.logo_path)} name={job.employer.name} size={64} /></div>
           <h2 className="text-[20px] font-bold">{job.employer.name}</h2>
           {job.employer.website_url && (
             <p className="mt-1 truncate text-[15px] text-body">
@@ -94,6 +96,7 @@ async function JobContent({ params }: Pick<PageProps<"/jobs/[id]">, "params">) {
           </Link>
         </section>
         <p className="text-[14px] text-muted">Listing expires {formatLongDate(job.expires_at)}.</p>
+        <Link href={`/contact?report=${job.id}`} className="text-[14px] text-muted underline underline-offset-[3px]">Report this listing</Link>
       </aside>
 
       <script

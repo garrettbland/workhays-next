@@ -1,10 +1,10 @@
 import Link from "next/link";
+import { AccountLink } from "@/components/AccountLink";
 
 const NAV = [
   { href: "/", label: "Jobs" },
   { href: "/events", label: "Events" },
   { href: "/employers", label: "Employers" },
-  { href: "/sign-in", label: "Sign in" },
 ];
 
 export function SiteHeader() {
@@ -20,6 +20,7 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          <AccountLink />
           <a
             href="/post-a-job"
             className="bg-gold px-4 py-2.5 font-semibold text-white hover:bg-gold-dark hover:text-white"

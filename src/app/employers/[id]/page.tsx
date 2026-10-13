@@ -5,7 +5,8 @@ import { notFound } from "next/navigation";
 import { getEmployer, getLiveJobs } from "@/lib/data";
 import { formatShortDate, JOB_TYPE_LABELS } from "@/lib/format";
 import { sanitizeRichText, toPlainText } from "@/lib/sanitize";
-import { SITE } from "@/lib/site";
+import { assetUrl, SITE } from "@/lib/site";
+import { EmployerLogo } from "@/components/EmployerLogo";
 
 export async function generateStaticParams() {
   const jobs = await getLiveJobs(SITE.id);
@@ -55,7 +56,10 @@ async function EmployerContent({ params }: Pick<PageProps<"/employers/[id]">, "p
   return (
     <div className="mt-6 flex flex-wrap gap-12">
       <div className="min-w-0 flex-[999_1_560px]">
-        <h1 className="condensed text-[36px] sm:text-[48px]">{employer.name}</h1>
+        <div className="flex flex-wrap items-center gap-5">
+          <EmployerLogo src={assetUrl(employer.logo_path)} name={employer.name} />
+          <h1 className="condensed text-[36px] sm:text-[48px]">{employer.name}</h1>
+        </div>
         {links.length > 0 && (
           <p className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-[15px]">
             {links.map((l) => (

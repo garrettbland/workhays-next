@@ -20,6 +20,7 @@ async function Header({ params }: Pick<LayoutProps<"/dashboard/[employerId]">, "
   const base = `/dashboard/${employer.id}`;
   const tabs = [
     { href: base, label: "Jobs" },
+    { href: `${base}/events`, label: "Events" },
     { href: `${base}/profile`, label: "Business profile" },
     { href: `${base}/team`, label: "Team" },
   ];

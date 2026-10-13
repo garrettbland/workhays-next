@@ -16,11 +16,14 @@ export default async function EventsPage() {
   return (
     <main className="mx-auto w-full max-w-[1120px] px-6 pb-20 pt-12">
       <h1 className="condensed text-[40px] sm:text-[52px]">Events</h1>
-      <p className="mt-3 max-w-[620px] text-[17px] text-body">Job fairs, hiring events and community happenings around Hays.</p>
+      <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
+        <p className="max-w-[620px] text-[17px] text-body">Job fairs, hiring events and community happenings around Hays.</p>
+        <Link href="/events/submit" className="bg-gold px-5 py-3 font-semibold text-white hover:bg-gold-dark hover:text-white">Submit an event</Link>
+      </div>
 
       <div className="mt-8 border-t-[3px] border-ink" />
       {events.length === 0 ? (
-        <p className="py-12 text-[17px] text-body">No upcoming events right now. Check back soon.</p>
+        <p className="py-12 text-[17px] text-body">No upcoming events right now. Know of one? <Link href="/events/submit" className="underline underline-offset-[3px]">Submit it here</Link>.</p>
       ) : (
         <ul>
           {events.map((ev) => (

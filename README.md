@@ -67,6 +67,18 @@ Checks: `npm run lint`, `npm run typecheck`, `npm run db:test` (Supabase CLI + D
 - **Featured jobs:** `promotions` rows (Stripe later) drive `jobs.featured_until`; featured jobs sort first.
 - Guard triggers stop non-staff from changing status/review/featured/expiry columns, even though RLS lets them edit the row.
 
+## Daily job (Vercel Cron)
+
+`vercel.json` calls `/api/cron/daily` every day at 14:00 UTC (8–9am Central) with `Authorization: Bearer $CRON_SECRET`. Each step is safe to re-run:
+
+1. `run_job_maintenance`: expires old jobs, auto-renews, turns off unconfirmed auto-renew
+2. Expiry reminders: one email per business, with no-login Renew / Position filled links (`/link/<token>`)
+3. "Still hiring?" checks for auto-renewing jobs every 60 days
+4. Admin digest when anything has waited for review more than a day
+5. Mondays: weekly new-jobs email to confirmed subscribers, with one-click unsubscribe
+
+Run it by hand: `curl -H "Authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cron/daily`
+
 ## Legacy migration
 
 ```bash
