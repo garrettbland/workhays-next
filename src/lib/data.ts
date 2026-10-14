@@ -58,7 +58,6 @@ export type Employer = {
   x_url: string | null;
   youtube_url: string | null;
   logo_path: string | null;
-  is_claimable: boolean;
 };
 
 export type EventListing = {
@@ -142,7 +141,7 @@ export async function getEmployer(id: string): Promise<Employer | null> {
   const { data, error } = await createPublicClient()
     .from("employers")
     .select(
-      "id, name, description_html, contact_name, email, phone, website_url, facebook_url, instagram_url, linkedin_url, x_url, youtube_url, logo_path, is_claimable",
+      "id, name, description_html, contact_name, email, phone, website_url, facebook_url, instagram_url, linkedin_url, x_url, youtube_url, logo_path",
     )
     .eq("id", id)
     .maybeSingle();

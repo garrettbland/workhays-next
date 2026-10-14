@@ -29,15 +29,6 @@ export async function notifyNewEmployer(opts: { employerId: string; name: string
   await sendEmail({ to: await staffEmails(), subject: `[${SITE.name}] New business to review: ${opts.name}`, html, text });
 }
 
-export async function notifyNewClaim(opts: { employerName: string; requestedBy: string }) {
-  const { html, text } = layout({
-    heading: `Claim request: ${opts.employerName}`,
-    paragraphs: [`${opts.requestedBy} asked to claim the listing "${opts.employerName}".`],
-    button: { label: "Review in admin", url: `${SITE.url}/admin` },
-  });
-  await sendEmail({ to: await staffEmails(), subject: `[${SITE.name}] Claim request: ${opts.employerName}`, html, text });
-}
-
 export async function notifyNewEvent(opts: { eventId: string; title: string; when: string; where: string; description: string; submittedBy: string }) {
   const { html, text } = layout({
     heading: `New event to review: ${opts.title}`,

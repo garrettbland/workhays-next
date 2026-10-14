@@ -51,14 +51,6 @@ export async function setEmployerStatus(form: FormData): Promise<void> {
   refresh();
 }
 
-export async function reviewClaim(form: FormData): Promise<void> {
-  const supabase = await session();
-  const { error } = await supabase.rpc("review_employer_claim", { p_claim_id: str(form, "claim_id"), p_approve: form.get("approve") === "1" });
-  if (error) throw new Error(error.message);
-  updateTag("employers");
-  refresh();
-}
-
 export async function reviewEvent(form: FormData): Promise<void> {
   const supabase = await session();
   const eventId = str(form, "event_id");

@@ -69,7 +69,7 @@ Checks: `npm run lint`, `npm run typecheck`, `npm run db:test` (Supabase CLI + D
 
 ## Admin (`/admin`, staff only, 2FA required)
 
-- **Review:** site totals, plus new businesses, claim requests and submitted events waiting for a decision
+- **Review:** site totals, plus new businesses and submitted events waiting for a decision
 - **Jobs / Employers / Events / Users / Subscribers / Messages:** searchable, filterable lists (filters live in the URL). Employer and event pages show everything before you approve, suspend or take something down.
 - **Ads:** placeholder for featured jobs and ads (Stripe, after launch)
 

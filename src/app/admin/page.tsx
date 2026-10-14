@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { reviewClaim, reviewEmployer, reviewEvent } from "@/app/admin/actions";
+import { reviewEmployer, reviewEvent } from "@/app/admin/actions";
 import { formatEventTime, formatShortDate } from "@/lib/format";
 import { personName } from "@/lib/admin";
 import { toPlainText } from "@/lib/sanitize";
@@ -27,7 +27,7 @@ async function Queue() {
   const staff = await requireStaff("/admin");
   const supabase = await createClient();
   const head = { count: "exact" as const, head: true };
-  const [employers, claims, events, liveJobs, approvedEmployers, upcoming, subscribers, messages] = await Promise.all([
+  const [employers, events, liveJobs, approvedEmployers, upcoming, subscribers, messages] = await Promise.all([
     supabase
       .from("employers")
       .select("id, name, email, website_url, created_at, members:employer_members(role, profile:profiles!employer_members_user_id_fkey(first_name, last_name, email))")
@@ -35,11 +35,6 @@ async function Queue() {
       .eq("status", "pending")
       .order("created_at", { ascending: false })
       .limit(100),
-    supabase
-      .from("employer_claims")
-      .select("id, message, created_at, employer:employers(id, name), profile:profiles!employer_claims_user_id_fkey(first_name, last_name, email)")
-      .eq("status", "pending")
-      .order("created_at"),
     supabase
       .from("events")
       .select("id, title, description_html, starts_at, all_day, location_name, submitter_name, submitter_email, created_at")
@@ -53,7 +48,7 @@ async function Queue() {
     supabase.from("subscribers").select("id", head).eq("site_id", SITE.id).eq("status", "confirmed"),
     supabase.from("contact_messages").select("id", head).eq("site_id", SITE.id).eq("status", "new"),
   ]);
-  const err = employers.error ?? claims.error ?? events.error;
+  const err = employers.error ?? events.error;
   if (err) throw new Error(`Admin queue failed to load: ${err.message}`);
 
   const stats = [
@@ -99,32 +94,6 @@ async function Queue() {
                     <label className="sr-only" htmlFor={`reason-${e.id}`}>Reason for denying</label>
                     <input id={`reason-${e.id}`} name="reason" placeholder="Reason (if denying)" className="h-11 w-[200px] border-[1.5px] border-ink px-3 text-[14px]" />
                     <button name="approve" value="0" className="border-[1.5px] border-[#9b1c1c] px-4 py-2 font-semibold text-[#9b1c1c]">Deny</button>
-                  </form>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </section>
-
-      <section className="mb-12">
-        <SectionTitle>Claim requests ({claims.data?.length ?? 0})</SectionTitle>
-        {!claims.data?.length ? <p className="py-6 text-body">Nothing waiting.</p> : (
-          <ul>
-            {claims.data.map((c) => {
-              const emp = c.employer as unknown as { id: string; name: string };
-              const who = c.profile as unknown as Person;
-              return (
-                <li key={c.id} className="flex flex-wrap items-start gap-x-6 gap-y-3 border-b border-line py-5">
-                  <div className="min-w-0 flex-[1_1_360px]">
-                    <p className="text-[18px] font-bold"><Link href={`/admin/employers/${emp.id}`} className="hover:text-gold">{emp.name}</Link></p>
-                    <p className="text-[14px] text-body">{personName(who)} · {who?.email}</p>
-                    {c.message && <p className="mt-1 text-[15px]">“{c.message}”</p>}
-                  </div>
-                  <form action={reviewClaim} className="flex gap-2">
-                    <input type="hidden" name="claim_id" value={c.id} />
-                    <button name="approve" value="1" className="bg-ink px-4 py-2.5 font-semibold text-white">Approve</button>
-                    <button name="approve" value="0" className="border-[1.5px] border-[#9b1c1c] px-4 py-2 font-semibold text-[#9b1c1c]">Reject</button>
                   </form>
                 </li>
               );

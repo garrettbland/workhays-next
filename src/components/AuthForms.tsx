@@ -7,14 +7,12 @@ import { Field, Input } from "@/components/ui/Field";
 import { ActionForm, FormMessage, SubmitButton } from "@/components/ui/Form";
 import { Turnstile } from "@/components/Turnstile";
 
-/** Reads ?next= (and ?claim=) from the address bar without making the page dynamic. */
+/** Reads ?next= from the address bar without making the page dynamic. */
 function useNext(fallback = "/dashboard"): string {
   return useSyncExternalStore(
     () => () => {},
     () => {
       const sp = new URLSearchParams(window.location.search);
-      const claim = sp.get("claim");
-      if (claim) return `/dashboard/new?claim=${encodeURIComponent(claim)}`;
       const next = sp.get("next") ?? "";
       return next.startsWith("/") && !next.startsWith("//") ? next : fallback;
     },

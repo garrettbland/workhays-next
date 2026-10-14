@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth";
 import { sanitizeRichText, toPlainText } from "@/lib/sanitize";
 import { SITE } from "@/lib/site";
-import { notifyEventPosted, notifyNewClaim, notifyNewEmployer, sendTeamInvite } from "@/lib/notify";
+import { notifyEventPosted, notifyNewEmployer, sendTeamInvite } from "@/lib/notify";
 import { formatEventWhen } from "@/lib/format";
 import { plainToHtml, zonedIso } from "@/lib/events";
 import type { ActionState } from "@/components/ui/Form";
@@ -43,15 +43,6 @@ export async function createEmployer(_: ActionState, form: FormData): Promise<Ac
   if (error) return { error: error.message };
   await notifyNewEmployer({ employerId: id as string, name, submittedBy: user.email });
   redirect(`/dashboard/${id}?welcome=1`);
-}
-
-export async function claimEmployer(_: ActionState, form: FormData): Promise<ActionState> {
-  const { user, supabase } = await session();
-  const employerId = str(form, "employer_id");
-  const { error } = await supabase.rpc("claim_employer", { p_employer_id: employerId, p_message: optional(str(form, "message")) });
-  if (error) return { error: error.message };
-  await notifyNewClaim({ employerName: str(form, "employer_name"), requestedBy: user.email });
-  return { ok: "Thanks! A moderator will review your claim and email you when it's approved." };
 }
 
 const url = z.union([z.literal(""), z.url({ message: "Enter a full web address, starting with https://" })]);

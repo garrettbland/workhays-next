@@ -149,20 +149,18 @@ async function sendStillHiringChecks(db: SupabaseClient) {
 /** Daily nudge to moderators when anything has been waiting more than a day. */
 async function sendAdminDigest(db: SupabaseClient, now: Date) {
   const cutoff = new Date(now.getTime() - 24 * 3600_000).toISOString();
-  const [emp, claims, events, staff] = await Promise.all([
+  const [emp, events, staff] = await Promise.all([
     db.from("employers").select("id", { count: "exact", head: true }).eq("site_id", SITE.id).eq("status", "pending").lt("created_at", cutoff),
-    db.from("employer_claims").select("id", { count: "exact", head: true }).eq("status", "pending").lt("created_at", cutoff),
     db.from("events").select("id", { count: "exact", head: true }).eq("site_id", SITE.id).eq("status", "pending").lt("created_at", cutoff),
     db.from("site_staff").select("profiles(email)").eq("site_id", SITE.id),
   ]);
-  const counts = { businesses: emp.count ?? 0, claims: claims.count ?? 0, events: events.count ?? 0 };
-  const total = counts.businesses + counts.claims + counts.events;
+  const counts = { businesses: emp.count ?? 0, events: events.count ?? 0 };
+  const total = counts.businesses + counts.events;
   if (!total) return { sent: false, ...counts };
 
   const to = (staff.data ?? []).map((r) => (r.profiles as unknown as { email: string } | null)?.email).filter((e): e is string => !!e);
   const lines = [
     counts.businesses && `${counts.businesses} new ${counts.businesses === 1 ? "business" : "businesses"}`,
-    counts.claims && `${counts.claims} claim ${counts.claims === 1 ? "request" : "requests"}`,
     counts.events && `${counts.events} submitted ${counts.events === 1 ? "event" : "events"}`,
   ].filter(Boolean) as string[];
   const { html, text } = layout({

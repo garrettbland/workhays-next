@@ -106,15 +106,6 @@ async function EmployerContent({ params }: Pick<PageProps<"/employers/[id]">, "p
             {employer.email && <p className="truncate"><a href={`mailto:${employer.email}`}>{employer.email}</a></p>}
           </section>
         )}
-        {employer.is_claimable && (
-          <section className="bg-gold-tint p-6 text-[15px]">
-            <h2 className="mb-1 font-bold">Is this your business?</h2>
-            <p className="text-body">Claim this listing to post jobs and keep it up to date.</p>
-            <Link href={`/sign-up?claim=${employer.id}`} className="mt-3 inline-block font-semibold text-gold underline underline-offset-[3px]">
-              Claim this business
-            </Link>
-          </section>
-        )}
       </aside>
     </div>
   );
