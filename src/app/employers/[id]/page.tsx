@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { getEmployer, getLiveJobs } from "@/lib/data";
 import { formatShortDate, JOB_TYPE_LABELS } from "@/lib/format";
 import { sanitizeRichText, toPlainText } from "@/lib/sanitize";
@@ -17,7 +18,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/employers/[id]">): Promise<Metadata> {
   const { id } = await params;
   const employer = await getEmployer(id);
-  if (!employer) return { title: "Employer not found", robots: { index: false } };
+  if (!employer) notFound(); // real 404 for search engines (they get metadata before the page streams)
   return {
     title: `${employer.name}: jobs`,
     description: toPlainText(employer.description_html).slice(0, 160) || `Open jobs at ${employer.name} on Work Hays.`,
@@ -47,6 +48,8 @@ const LINKS = [
 
 async function EmployerContent({ params }: Pick<PageProps<"/employers/[id]">, "params">) {
   const { id } = await params;
+  // Rendered per request from cached data, so takedowns and edits show on the very next view.
+  await connection();
   const [employer, liveJobs] = await Promise.all([getEmployer(id), getLiveJobs(SITE.id)]);
   if (!employer) notFound();
   const jobs = liveJobs.filter((j) => j.employer_id === employer.id);

@@ -1,10 +1,11 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { refresh, updateTag } from "next/cache";
+import { refresh } from "next/cache";
+import { refreshEvents, refreshJobs } from "@/lib/refresh";
 import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth";
-import { notifyEmployerReviewed, notifyEventReviewed, notifyJobChangedByStaff } from "@/lib/notify";
+import { notifyEmployerReviewed, notifyEmployerStatusByStaff, notifyEventReviewed, notifyJobChangedByStaff } from "@/lib/notify";
 import { parseJobFields } from "@/lib/job-fields";
 import { zonedIso } from "@/lib/events";
 import type { ActionState } from "@/components/ui/Form";
@@ -32,8 +33,7 @@ export async function reviewEmployer(form: FormData): Promise<void> {
   if (error) throw new Error(error.message);
   const { data } = await supabase.from("employers").select("name").eq("id", employerId).single();
   await notifyEmployerReviewed({ employerId, name: data?.name ?? "Your business", approved: approve, reason });
-  updateTag("employers");
-  updateTag("jobs");
+  refreshJobs({ employerId });
   back(form);
   refresh();
 }
@@ -43,14 +43,16 @@ export async function setEmployerStatus(form: FormData): Promise<void> {
   const supabase = await session();
   const status = str(form, "status");
   if (!["approved", "suspended", "denied", "pending"].includes(status)) throw new Error("Invalid status");
-  const { error } = await supabase.rpc("set_employer_status", {
-    p_employer_id: str(form, "employer_id"),
-    p_status: status,
-    p_reason: str(form, "reason") || null,
-  });
+  const employerId = str(form, "employer_id");
+  const message = str(form, "reason") || null;
+  const { error } = await supabase.rpc("set_employer_status", { p_employer_id: employerId, p_status: status, p_reason: message });
   if (error) throw new Error(error.message);
-  updateTag("employers");
-  updateTag("jobs");
+  if (form.get("notify") === "on" && (status === "suspended" || status === "approved")) {
+    const { data } = await supabase.from("employers").select("name").eq("id", employerId).single();
+    const me = await getUser();
+    await notifyEmployerStatusByStaff({ employerId, name: data?.name ?? "Your business", status, message, replyTo: me?.email });
+  }
+  refreshJobs({ employerId });
   refresh();
 }
 
@@ -65,8 +67,7 @@ export async function reviewEvent(form: FormData): Promise<void> {
   if (ev?.submitter_email) {
     await notifyEventReviewed({ eventId, title: ev.title, email: ev.submitter_email, approved: approve, note });
   }
-  updateTag("events");
-  updateTag(`event:${eventId}`);
+  refreshEvents(eventId);
   back(form);
   refresh();
 }
@@ -77,8 +78,7 @@ export async function removeEvent(form: FormData): Promise<void> {
   const eventId = str(form, "event_id");
   const { error } = await supabase.from("events").update({ deleted_at: new Date().toISOString() }).eq("id", eventId);
   if (error) throw new Error(error.message);
-  updateTag("events");
-  updateTag(`event:${eventId}`);
+  refreshEvents(eventId);
   back(form);
   refresh();
 }
@@ -102,9 +102,7 @@ export async function takeDownJob(form: FormData): Promise<void> {
       change: "taken_down", message: str(form, "message") || null, replyTo: me?.email,
     });
   }
-  updateTag("jobs");
-  updateTag(`job:${jobId}`);
-  if (job) updateTag(`employer:${job.employer_id}`);
+  refreshJobs({ jobId, employerId: job?.employer_id });
   refresh();
 }
 
@@ -122,9 +120,7 @@ export async function restoreJob(form: FormData): Promise<void> {
       change: "restored", message: str(form, "message") || null, replyTo: me?.email,
     });
   }
-  updateTag("jobs");
-  updateTag(`job:${jobId}`);
-  if (job) updateTag(`employer:${job.employer_id}`);
+  refreshJobs({ jobId, employerId: job?.employer_id });
   refresh();
 }
 
@@ -139,8 +135,7 @@ export async function setJobExpiry(form: FormData): Promise<void> {
     .update({ expires_at: zonedIso(date, "23:59"), expiry_reminder_sent_at: null })
     .eq("id", jobId);
   if (error) throw new Error(error.message);
-  updateTag("jobs");
-  updateTag(`job:${jobId}`);
+  refreshJobs({ jobId });
   refresh();
 }
 
@@ -153,9 +148,7 @@ export async function adminSaveJob(_: ActionState, form: FormData): Promise<Acti
   const { data, error } = await supabase.from("jobs").update(parsed.fields).eq("id", jobId).select("id, employer_id");
   if (error) return { error: "Couldn't save the job. Please try again." };
   if (!data?.length) return { error: "Job not found." };
-  updateTag("jobs");
-  updateTag(`job:${jobId}`);
-  updateTag(`employer:${data[0].employer_id}`);
+  refreshJobs({ jobId, employerId: data[0].employer_id });
   redirect(`/admin/jobs/${jobId}?saved=1`);
 }
 

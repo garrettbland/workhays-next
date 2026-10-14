@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { getIndustries, getJob, getLiveJobs, type JobDetail } from "@/lib/data";
 import { formatLongDate, formatPay, JOB_TYPE_LABELS, JOB_TYPE_SCHEMA } from "@/lib/format";
 import { sanitizeRichText, toPlainText } from "@/lib/sanitize";
@@ -17,7 +18,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/jobs/[id]">): Promise<Metadata> {
   const { id } = await params;
   const job = await getJob(id);
-  if (!job) return { title: "Job no longer available", robots: { index: false } };
+  if (!job) notFound(); // real 404 for search engines (they get metadata before the page streams)
   const description = toPlainText(job.description_html).slice(0, 160);
   return {
     title: `${job.title} at ${job.employer.name}`,
@@ -40,6 +41,8 @@ export default function JobPage({ params }: PageProps<"/jobs/[id]">) {
 
 async function JobContent({ params }: Pick<PageProps<"/jobs/[id]">, "params">) {
   const { id } = await params;
+  // Rendered per request from cached data, so takedowns and edits show on the very next view.
+  await connection();
   const [job, liveJobs, industries] = await Promise.all([getJob(id), getLiveJobs(SITE.id), getIndustries(SITE.id)]);
   if (!job) notFound();
 

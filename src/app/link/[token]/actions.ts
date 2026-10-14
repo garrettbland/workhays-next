@@ -1,6 +1,6 @@
 "use server";
 
-import { updateTag } from "next/cache";
+import { refreshJobs } from "@/lib/refresh";
 import { createPublicClient } from "@/lib/supabase/public";
 
 export type LinkState = { ok?: string; error?: string } | undefined;
@@ -20,8 +20,7 @@ export async function performLink(_: LinkState, form: FormData): Promise<LinkSta
   if (error) return { error: error.message };
   const r = data as { purpose: string; job_id?: string; expires_at?: string };
   if (r.job_id) {
-    updateTag("jobs");
-    updateTag(`job:${r.job_id}`);
+    refreshJobs({ jobId: r.job_id });
   }
   return { ok: DONE[r.purpose]?.(r) ?? "Done." };
 }

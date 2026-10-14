@@ -99,6 +99,35 @@ export async function notifyEmployerReviewed(opts: { employerId: string; name: s
   });
 }
 
+/** Tells a business it was suspended (or reinstated) by staff, with an optional note. */
+export async function notifyEmployerStatusByStaff(opts: {
+  employerId: string; name: string; status: "suspended" | "approved"; message: string | null; replyTo?: string;
+}) {
+  const note = opts.message ? [`Note from ${SITE.name}: ${opts.message}`] : [];
+  const { html, text } =
+    opts.status === "suspended"
+      ? layout({
+          heading: `${opts.name} has been suspended`,
+          paragraphs: [
+            `Your business and its job listings are no longer shown on ${SITE.name}, and new jobs can't be published for now.`,
+            ...note,
+            "Questions? Reply to this email.",
+          ],
+        })
+      : layout({
+          heading: `${opts.name} is active again`,
+          paragraphs: [`Your business is back on ${SITE.name}. You can publish jobs and events again.`, ...note],
+          button: { label: "Go to your dashboard", url: `${SITE.url}/dashboard/${opts.employerId}` },
+        });
+  await sendEmail({
+    to: await ownerEmails(opts.employerId),
+    subject: opts.status === "suspended" ? `${opts.name} has been suspended on ${SITE.name}` : `${opts.name} is active again on ${SITE.name}`,
+    html,
+    text,
+    replyTo: opts.replyTo,
+  });
+}
+
 /** Tells a business that staff took a job down or put it back up, with an optional note. */
 export async function notifyJobChangedByStaff(opts: {
   jobId: string; title: string; employerId: string; createdBy: string | null;

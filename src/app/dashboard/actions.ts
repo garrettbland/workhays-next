@@ -1,7 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { refresh, updateTag } from "next/cache";
+import { refresh } from "next/cache";
+import { refreshEvents, refreshJobs } from "@/lib/refresh";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth";
@@ -24,10 +25,7 @@ const str = (form: FormData, key: string) => String(form.get(key) ?? "").trim();
 const optional = (v: string) => (v === "" ? null : v);
 
 function refreshPublic(employerId?: string, jobId?: string) {
-  updateTag("jobs");
-  updateTag("employers");
-  if (employerId) updateTag(`employer:${employerId}`);
-  if (jobId) updateTag(`job:${jobId}`);
+  refreshJobs({ employerId, jobId });
 }
 
 // ---------------------------------------------------------------------------
@@ -319,7 +317,7 @@ export async function createEvent(_: ActionState, form: FormData): Promise<Actio
       postedBy: user?.email ?? "",
     });
   }
-  updateTag("events");
+  refreshEvents();
   refresh();
   return { ok: data.status === "approved" ? "Your event is posted." : "Saved. It will be posted once your business is approved." };
 }
@@ -327,6 +325,6 @@ export async function createEvent(_: ActionState, form: FormData): Promise<Actio
 export async function deleteEvent(form: FormData): Promise<void> {
   const { supabase } = await session();
   await supabase.from("events").update({ deleted_at: new Date().toISOString() }).eq("id", str(form, "event_id"));
-  updateTag("events");
+  refreshEvents(str(form, "event_id"));
   refresh();
 }

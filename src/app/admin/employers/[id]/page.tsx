@@ -163,15 +163,20 @@ async function EmployerDetail({ params }: Pick<PageProps<"/admin/employers/[id]"
             ) : (
               <form action={setEmployerStatus} className="mt-4 flex flex-col gap-3">
                 <input type="hidden" name="employer_id" value={e.id} />
+                <label className="flex items-center gap-3 text-[15px]">
+                  <input type="checkbox" name="notify" defaultChecked className="size-5 accent-[#8a5a00]" /> Email the business
+                </label>
                 <label className="flex flex-col gap-1 text-[13px] font-semibold">
-                  Reason (kept on file)
-                  <input name="reason" defaultValue={e.status_reason ?? ""} className="h-11 border-[1.5px] border-ink px-3 text-[15px] font-normal" />
+                  Message <span className="font-normal text-muted">(optional; included in the email and kept on file)</span>
+                  <textarea name="reason" rows={3} maxLength={1000} className="border-[1.5px] border-ink px-3 py-2 text-[15px] font-normal" />
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {e.status !== "approved" && <button name="status" value="approved" className="bg-ink px-4 py-2.5 font-semibold text-white">Approve</button>}
                   {e.status !== "suspended" && <button name="status" value="suspended" className="border-[1.5px] border-[#9b1c1c] px-4 py-2 font-semibold text-[#9b1c1c]">Suspend</button>}
                 </div>
-                <p className="text-[13px] text-muted">Suspending hides the business and all its jobs right away. No email is sent.</p>
+                <p className="text-[13px] text-muted">
+                  {e.status === "suspended" ? "Approving puts the business and its live jobs back on the site." : "Suspending hides the business and all its jobs right away."}
+                </p>
               </form>
             )}
           </section>
