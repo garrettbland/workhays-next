@@ -42,7 +42,7 @@ async function Queue() {
       .order("created_at"),
     supabase
       .from("events")
-      .select("id, title, description_html, starts_at, all_day, location_name, submitter_name, submitter_email, is_job_fair, created_at")
+      .select("id, title, description_html, starts_at, all_day, location_name, submitter_name, submitter_email, created_at")
       .eq("site_id", SITE.id)
       .eq("status", "pending")
       .is("deleted_at", null)
@@ -142,7 +142,6 @@ async function Queue() {
                 <div className="min-w-0 flex-[1_1_360px]">
                   <p className="text-[18px] font-bold">
                     <Link href={`/admin/events/${ev.id}`} className="hover:text-gold">{ev.title}</Link>
-                    {ev.is_job_fair && <span className="ml-3 align-middle font-mono text-[11px] uppercase tracking-[0.08em] text-gold">Job fair</span>}
                   </p>
                   <p className="text-[14px] text-body">{formatEventTime(ev.starts_at, ev.all_day)} · {ev.location_name} · from {ev.submitter_name} ({ev.submitter_email})</p>
                   <p className="mt-2 line-clamp-2 max-w-[640px] text-[15px]">{toPlainText(ev.description_html)}</p>

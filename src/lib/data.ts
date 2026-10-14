@@ -71,7 +71,6 @@ export type EventListing = {
   location_name: string | null;
   address: string | null;
   event_url: string | null;
-  is_job_fair: boolean;
   employer_id: string | null;
   employer_name: string | null;
 };
@@ -157,7 +156,7 @@ export async function getUpcomingEvents(siteId: string): Promise<EventListing[]>
   cacheTag("events");
   const { data, error } = await createPublicClient()
     .from("upcoming_events")
-    .select("id, title, description_html, starts_at, ends_at, all_day, location_name, address, event_url, is_job_fair, employer_id, employer_name")
+    .select("id, title, description_html, starts_at, ends_at, all_day, location_name, address, event_url, employer_id, employer_name")
     .eq("site_id", siteId)
     .order("starts_at");
   if (error) throw new Error(`Failed to load events: ${error.message}`);
@@ -175,7 +174,6 @@ export type EventDetail = {
   address: string | null;
   event_url: string | null;
   image_path: string | null;
-  is_job_fair: boolean;
   employer: { id: string; name: string; logo_path: string | null } | null;
 };
 
@@ -188,7 +186,7 @@ export async function getEvent(id: string): Promise<EventDetail | null> {
   const { data, error } = await createPublicClient()
     .from("events")
     .select(
-      "id, title, description_html, starts_at, ends_at, all_day, location_name, address, event_url, image_path, is_job_fair, employer:employers(id, name, logo_path)",
+      "id, title, description_html, starts_at, ends_at, all_day, location_name, address, event_url, image_path, employer:employers(id, name, logo_path)",
     )
     .eq("id", id)
     .eq("status", "approved")

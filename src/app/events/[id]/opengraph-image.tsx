@@ -24,7 +24,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
       <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", background: "#ffffff", padding: "64px 72px", color: "#111111", fontFamily: "Archivo" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "6px solid #111111", paddingBottom: 24 }}>
           <div style={{ fontSize: 30, fontWeight: 800, letterSpacing: 4 }}>WORK HAYS</div>
-          <div style={{ fontSize: 26, color: "#8a5a00", fontWeight: 800, letterSpacing: 2 }}>{ev?.is_job_fair ? "JOB FAIR" : "EVENT"}</div>
+          <div style={{ fontSize: 26, color: "#8a5a00", fontWeight: 800, letterSpacing: 2 }}>EVENT</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
           {when && <div style={{ fontSize: 34, color: "#8a5a00", fontWeight: 500 }}>{`${when.date} · ${when.time}`}</div>}

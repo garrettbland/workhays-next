@@ -93,7 +93,6 @@ export async function submitEvent(_: ActionState, form: FormData): Promise<Actio
     location_name: d.location_name,
     address: d.address || null,
     event_url: d.event_url || null,
-    is_job_fair: form.get("is_job_fair") === "on",
     submitter_name: d.submitter_name,
     submitter_email: d.submitter_email.toLowerCase(),
     status: "pending",

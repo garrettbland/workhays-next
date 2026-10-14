@@ -56,7 +56,7 @@ async function EventContent({ params }: Pick<PageProps<"/events/[id]">, "params"
     <div className="mt-6 flex flex-wrap gap-12">
       <article className="min-w-0 flex-[999_1_560px]">
         <p className="mb-2.5 font-mono text-[13px] uppercase tracking-[0.08em] text-gold">
-          {ev.is_job_fair ? "Job fair · " : ""}{when.date}
+          {when.date}
         </p>
         <h1 className="condensed text-[36px] sm:text-[48px]">{ev.title}</h1>
         {past && (

@@ -7,7 +7,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth";
 import { sanitizeRichText, toPlainText } from "@/lib/sanitize";
 import { SITE } from "@/lib/site";
-import { notifyNewClaim, notifyNewEmployer, sendTeamInvite } from "@/lib/notify";
+import { notifyEventPosted, notifyNewClaim, notifyNewEmployer, sendTeamInvite } from "@/lib/notify";
+import { formatEventWhen } from "@/lib/format";
 import { plainToHtml, zonedIso } from "@/lib/events";
 import type { ActionState } from "@/components/ui/Form";
 
@@ -350,11 +351,24 @@ export async function createEvent(_: ActionState, form: FormData): Promise<Actio
       location_name: d.location_name,
       address: optional(d.address),
       event_url: optional(d.event_url),
-      is_job_fair: form.get("is_job_fair") === "on",
     })
-    .select("status")
+    .select("id, status, starts_at, ends_at, all_day, employer:employers(name)")
     .single();
   if (error) return { error: "Couldn't save the event. Please try again." };
+  if (data.status === "approved") {
+    // Goes live without review; staff just get a heads-up.
+    const when = formatEventWhen(data.starts_at, data.ends_at, data.all_day);
+    const user = await getUser();
+    await notifyEventPosted({
+      eventId: data.id,
+      title: d.title,
+      when: `${when.date}, ${when.time}`,
+      where: d.location_name,
+      description: d.description,
+      business: (data.employer as unknown as { name: string } | null)?.name ?? "A business",
+      postedBy: user?.email ?? "",
+    });
+  }
   updateTag("events");
   refresh();
   return { ok: data.status === "approved" ? "Your event is posted." : "Saved. It will be posted once your business is approved." };

@@ -52,10 +52,7 @@ async function EventDetail({ params }: Pick<PageProps<"/admin/events/[id]">, "pa
   return (
     <div className="mt-6 flex flex-wrap gap-12">
       <article className="min-w-0 flex-[999_1_560px]">
-        <div className="flex flex-wrap items-center gap-3">
-          <StatusBadge status={status} />
-          {ev.is_job_fair && <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-gold">Job fair</span>}
-        </div>
+        <StatusBadge status={status} />
         <h1 className="condensed mt-3 text-[34px] sm:text-[44px]">{ev.title}</h1>
 
         <dl className="mt-6 border-t-[3px] border-ink text-[16px]">

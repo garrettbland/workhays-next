@@ -47,6 +47,22 @@ export async function notifyNewEvent(opts: { eventId: string; title: string; whe
   await sendEmail({ to: await staffEmails(), subject: `[${SITE.name}] Event to review: ${opts.title}`, html, text });
 }
 
+/** Heads-up when an approved business posts an event (it's already live; no review needed). */
+export async function notifyEventPosted(opts: {
+  eventId: string; title: string; when: string; where: string; description: string; business: string; postedBy: string;
+}) {
+  const { html, text } = layout({
+    heading: `${opts.business} posted an event: ${opts.title}`,
+    paragraphs: [
+      `${opts.when} · ${opts.where}`,
+      opts.description.slice(0, 600),
+      `Posted by ${opts.postedBy}. It's live now. No review needed; you can take it down from the admin page if something's wrong.`,
+    ],
+    button: { label: "View in admin", url: `${SITE.url}/admin/events/${opts.eventId}` },
+  });
+  await sendEmail({ to: await staffEmails(), subject: `[${SITE.name}] New event from ${opts.business}: ${opts.title}`, html, text });
+}
+
 /** Tells the person who submitted a public event whether it was posted. */
 export async function notifyEventReviewed(opts: { eventId: string; title: string; email: string; approved: boolean; note?: string | null }) {
   const { html, text } = opts.approved

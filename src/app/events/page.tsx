@@ -34,7 +34,6 @@ export default async function EventsPage() {
               <div className="min-w-0 flex-[1_1_480px]">
                 <h2 className="text-[22px] font-bold">
                   <Link href={`/events/${ev.id}`} className="hover:text-gold">{ev.title}</Link>
-                  {ev.is_job_fair && <span className="ml-3 align-middle font-mono text-[11px] uppercase tracking-[0.08em] text-gold">Job fair</span>}
                 </h2>
                 <p className="mt-1 text-[15px] text-body">
                   {[ev.location_name, ev.address].filter(Boolean).join(" · ")}

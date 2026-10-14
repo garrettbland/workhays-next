@@ -33,7 +33,7 @@ async function EventsList({ searchParams }: Pick<PageProps<"/admin/events">, "se
 
   let query = supabase
     .from("events")
-    .select("id, title, starts_at, all_day, status, is_job_fair, submitter_name, created_at, deleted_at, employer:employers(name)", { count: "exact" })
+    .select("id, title, starts_at, all_day, status, submitter_name, created_at, deleted_at, employer:employers(name)", { count: "exact" })
     .eq("site_id", SITE.id);
   if (p.status === "removed") query = query.not("deleted_at", "is", null);
   else {
@@ -81,7 +81,6 @@ async function EventsList({ searchParams }: Pick<PageProps<"/admin/events">, "se
               <td className={`${td} whitespace-nowrap font-mono text-[13px]`}>{formatEventTime(ev.starts_at, ev.all_day)}</td>
               <td className={td}>
                 <Link href={`/admin/events/${ev.id}`} className="font-semibold hover:text-gold">{ev.title}</Link>
-                {ev.is_job_fair && <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.08em] text-gold">Job fair</span>}
               </td>
               <td className={td}>{emp?.name ?? <span className="text-body">{ev.submitter_name} (public)</span>}</td>
               <td className={td}><StatusBadge status={ev.deleted_at ? "removed" : ev.status} /></td>

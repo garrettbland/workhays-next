@@ -22,10 +22,6 @@ export function EmployerEventForm({ employerId }: { employerId: string }) {
       </div>
       <Field label="Link for more info" htmlFor="ev-url"><Input id="ev-url" name="event_url" type="url" placeholder="https://" /></Field>
       <Field label="Description" htmlFor="ev-desc"><Textarea id="ev-desc" name="description" rows={5} required minLength={10} /></Field>
-      <label className="flex items-center gap-3 text-[15px]">
-        <input type="checkbox" name="is_job_fair" className="size-5 accent-[#8a5a00]" /> This is a job fair or hiring event
-        <span className="text-muted">(gets a “Job fair” label)</span>
-      </label>
       <FormMessage state={state} />
       <div><SubmitButton variant="gold" pendingLabel="Posting…">Post event</SubmitButton></div>
     </ActionForm>
