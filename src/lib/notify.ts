@@ -24,7 +24,7 @@ export async function notifyNewEmployer(opts: { employerId: string; name: string
   const { html, text } = layout({
     heading: `New business waiting for approval: ${opts.name}`,
     paragraphs: [`${opts.submittedBy} signed up "${opts.name}" on ${SITE.name}.`, "Review it to let them start posting jobs."],
-    button: { label: "Review in admin", url: `${SITE.url}/admin` },
+    button: { label: "Review in admin", url: `${SITE.url}/admin/employers/${opts.employerId}` },
   });
   await sendEmail({ to: await staffEmails(), subject: `[${SITE.name}] New business to review: ${opts.name}`, html, text });
 }
@@ -38,13 +38,36 @@ export async function notifyNewClaim(opts: { employerName: string; requestedBy: 
   await sendEmail({ to: await staffEmails(), subject: `[${SITE.name}] Claim request: ${opts.employerName}`, html, text });
 }
 
-export async function notifyNewEvent(opts: { title: string; submittedBy: string }) {
+export async function notifyNewEvent(opts: { eventId: string; title: string; when: string; where: string; description: string; submittedBy: string }) {
   const { html, text } = layout({
     heading: `New event to review: ${opts.title}`,
-    paragraphs: [`Submitted by ${opts.submittedBy}.`],
-    button: { label: "Review in admin", url: `${SITE.url}/admin` },
+    paragraphs: [`${opts.when} · ${opts.where}`, opts.description.slice(0, 600), `Submitted by ${opts.submittedBy}.`],
+    button: { label: "Review the event", url: `${SITE.url}/admin/events/${opts.eventId}` },
   });
   await sendEmail({ to: await staffEmails(), subject: `[${SITE.name}] Event to review: ${opts.title}`, html, text });
+}
+
+/** Tells the person who submitted a public event whether it was posted. */
+export async function notifyEventReviewed(opts: { eventId: string; title: string; email: string; approved: boolean; note?: string | null }) {
+  const { html, text } = opts.approved
+    ? layout({
+        heading: `Your event is posted: ${opts.title}`,
+        paragraphs: ["Thanks for sharing it. Here's the link if you'd like to pass it around."],
+        button: { label: "View your event", url: `${SITE.url}/events/${opts.eventId}` },
+      })
+    : layout({
+        heading: `We didn't post ${opts.title}`,
+        paragraphs: [
+          opts.note ? `Note from our moderator: ${opts.note}` : "It didn't fit what we list on the events page.",
+          "Questions? Reply to this email.",
+        ],
+      });
+  await sendEmail({
+    to: opts.email,
+    subject: opts.approved ? `Your event is live on ${SITE.name}` : `About the event you submitted to ${SITE.name}`,
+    html,
+    text,
+  });
 }
 
 export async function notifyEmployerReviewed(opts: { employerId: string; name: string; approved: boolean; reason?: string | null }) {

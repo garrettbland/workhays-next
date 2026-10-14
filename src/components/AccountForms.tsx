@@ -3,33 +3,33 @@
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { changePassword, confirmTotp, startTotp, updateName, type EnrollState } from "@/app/account/actions";
 import { Field, Input } from "@/components/ui/Field";
-import { FormMessage, SubmitButton } from "@/components/ui/Form";
+import { ActionForm, FormMessage, SubmitButton } from "@/components/ui/Form";
 
 export function NameForm({ first, last }: { first: string; last: string }) {
   const [state, action] = useActionState(updateName, undefined);
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <ActionForm action={action} className="flex flex-col gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="First name" htmlFor="first_name"><Input id="first_name" name="first_name" defaultValue={first} required /></Field>
         <Field label="Last name" htmlFor="last_name"><Input id="last_name" name="last_name" defaultValue={last} /></Field>
       </div>
       <FormMessage state={state} />
       <div><SubmitButton variant="secondary" pendingLabel="Saving…">Save name</SubmitButton></div>
-    </form>
+    </ActionForm>
   );
 }
 
 export function PasswordForm() {
   const [state, action] = useActionState(changePassword, undefined);
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <ActionForm action={action} className="flex flex-col gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="New password" htmlFor="password"><Input id="password" name="password" type="password" autoComplete="new-password" minLength={10} required /></Field>
         <Field label="Confirm" htmlFor="confirm"><Input id="confirm" name="confirm" type="password" autoComplete="new-password" minLength={10} required /></Field>
       </div>
       <FormMessage state={state} />
       <div><SubmitButton variant="secondary" pendingLabel="Saving…">Change password</SubmitButton></div>
-    </form>
+    </ActionForm>
   );
 }
 
@@ -60,7 +60,7 @@ export function TotpSetup({ next }: { next?: string }) {
     );
   }
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <ActionForm action={action} className="flex flex-col gap-4">
       <input type="hidden" name="factor_id" value={enroll.factorId} />
       {next && <input type="hidden" name="next" value={next} />}
       <ol className="list-decimal space-y-2 pl-5 text-[15px]">
@@ -76,7 +76,7 @@ export function TotpSetup({ next }: { next?: string }) {
       </Field>
       <FormMessage state={state} />
       <div><SubmitButton variant="gold" pendingLabel="Checking…">Turn on two-factor</SubmitButton></div>
-    </form>
+    </ActionForm>
   );
 }
 

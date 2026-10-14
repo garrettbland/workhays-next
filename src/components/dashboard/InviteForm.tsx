@@ -3,12 +3,12 @@
 import { useActionState } from "react";
 import { inviteMember } from "@/app/dashboard/actions";
 import { Field, Input, Select } from "@/components/ui/Field";
-import { FormMessage, SubmitButton } from "@/components/ui/Form";
+import { ActionForm, FormMessage, SubmitButton } from "@/components/ui/Form";
 
 export function InviteForm({ employerId, canInviteAdmins }: { employerId: string; canInviteAdmins: boolean }) {
   const [state, action] = useActionState(inviteMember, undefined);
   return (
-    <form action={action} className="flex max-w-[760px] flex-col gap-4">
+    <ActionForm action={action} className="flex max-w-[760px] flex-col gap-4">
       <input type="hidden" name="employer_id" value={employerId} />
       <div className="flex flex-wrap items-end gap-3">
         <div className="min-w-0 flex-[1_1_280px]">
@@ -25,6 +25,6 @@ export function InviteForm({ employerId, canInviteAdmins }: { employerId: string
         <SubmitButton variant="gold" pendingLabel="Sending…">Send invite</SubmitButton>
       </div>
       <FormMessage state={state} />
-    </form>
+    </ActionForm>
   );
 }

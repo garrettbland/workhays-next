@@ -67,6 +67,18 @@ Checks: `npm run lint`, `npm run typecheck`, `npm run db:test` (Supabase CLI + D
 - **Featured jobs:** `promotions` rows (Stripe later) drive `jobs.featured_until`; featured jobs sort first.
 - Guard triggers stop non-staff from changing status/review/featured/expiry columns, even though RLS lets them edit the row.
 
+## Admin (`/admin`, staff only, 2FA required)
+
+- **Review:** site totals, plus new businesses, claim requests and submitted events waiting for a decision
+- **Jobs / Employers / Events / Users / Subscribers / Messages:** searchable, filterable lists (filters live in the URL). Employer and event pages show everything before you approve, suspend or take something down.
+- **Ads:** placeholder for featured jobs and ads (Stripe, after launch)
+
+Every admin write is also enforced in the database (RLS and staff-only RPCs), so the pages are a convenience, not the security boundary.
+
+## Forms
+
+Forms that call a server action with `useActionState` use `<ActionForm>` (`components/ui/Form.tsx`), which keeps what people typed when the server returns an error. A plain `<form action>` is reset by React after every submit.
+
 ## Daily job (Vercel Cron)
 
 `vercel.json` calls `/api/cron/daily` every day at 14:00 UTC (8–9am Central) with `Authorization: Bearer $CRON_SECRET`. Each step is safe to re-run:

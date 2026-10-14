@@ -1,9 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import Link from "next/link";
+import { useActionState, useEffect, useRef, useState, type RefObject } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { sendContact, submitEvent, subscribe } from "@/app/public-actions";
 import { Field, Input, Textarea } from "@/components/ui/Field";
-import { FormMessage, SubmitButton } from "@/components/ui/Form";
+import { ActionForm, FormMessage, SubmitButton } from "@/components/ui/Form";
 import { Turnstile } from "@/components/Turnstile";
 
 /** Off-screen field that only bots fill in. */
@@ -15,11 +17,56 @@ function Honeypot() {
   );
 }
 
+type Me = { name: string; email: string; businesses: { id: string; name: string }[] };
+
+/** If someone is signed in, look up their name, email and approved businesses (in the browser, so pages stay cached). */
+function useSignedInUser(): Me | null {
+  const [me, setMe] = useState<Me | null>(null);
+  useEffect(() => {
+    if (!document.cookie.includes("-auth-token")) return;
+    const supabase = createClient();
+    let cancelled = false;
+    (async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) return;
+      const [{ data: profile }, { data: members }] = await Promise.all([
+        supabase.from("profiles").select("first_name, last_name, email").eq("id", auth.user.id).maybeSingle(),
+        supabase.from("employer_members").select("employer:employers(id, name, status)").eq("user_id", auth.user.id),
+      ]);
+      if (cancelled) return;
+      type Emp = { id: string; name: string; status: string } | null;
+      setMe({
+        name: [profile?.first_name, profile?.last_name].filter(Boolean).join(" "),
+        email: profile?.email ?? auth.user.email ?? "",
+        businesses: (members ?? [])
+          .map((m) => m.employer as unknown as Emp)
+          .filter((e): e is NonNullable<Emp> => !!e && e.status === "approved")
+          .map(({ id, name }) => ({ id, name })),
+      });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return me;
+}
+
+/** Fill empty fields with the signed-in person's details, without overwriting anything typed. */
+function usePrefill(form: RefObject<HTMLFormElement | null>, me: Me | null, fields: { name: string; email: string }) {
+  useEffect(() => {
+    if (!me || !form.current) return;
+    for (const [field, value] of [[fields.name, me.name], [fields.email, me.email]] as const) {
+      const input = form.current.elements.namedItem(field) as HTMLInputElement | null;
+      if (input && !input.value && value) input.value = value;
+    }
+  }, [me, form, fields.name, fields.email]);
+}
+
 export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   const [state, action] = useActionState(subscribe, undefined);
   if (state?.ok) return <FormMessage state={state} />;
   return (
-    <form action={action} className="flex flex-col gap-3">
+    <ActionForm action={action} className="flex flex-col gap-3">
       <Honeypot />
       <div className="flex flex-wrap gap-2">
         <label htmlFor={compact ? "nl-email-c" : "nl-email"} className="sr-only">Email address</label>
@@ -28,15 +75,32 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
       </div>
       <Turnstile resetKey={state} compact />
       <FormMessage state={state} />
-    </form>
+    </ActionForm>
   );
 }
 
 export function EventSubmitForm() {
   const [state, action] = useActionState(submitEvent, undefined);
+  const me = useSignedInUser();
+  const ref = useRef<HTMLFormElement>(null);
+  usePrefill(ref, me, { name: "submitter_name", email: "submitter_email" });
   if (state?.ok) return <FormMessage state={state} />;
   return (
-    <form action={action} className="flex max-w-[760px] flex-col gap-6">
+    <ActionForm ref={ref} action={action} className="flex max-w-[760px] flex-col gap-6">
+      {me && me.businesses.length > 0 && (
+        <p className="border-l-[3px] border-gold bg-gold-tint px-4 py-3 text-[15px]">
+          Posting for {me.businesses.length === 1 ? me.businesses[0].name : "your business"}? Post it from{" "}
+          {me.businesses.map((b, i) => (
+            <span key={b.id}>
+              {i > 0 && (i === me.businesses.length - 1 ? " or " : ", ")}
+              <Link href={`/dashboard/${b.id}/events`} className="font-semibold underline underline-offset-[3px]">
+                {me.businesses.length === 1 ? "your dashboard" : `${b.name}'s dashboard`}
+              </Link>
+            </span>
+          ))}{" "}
+          instead and it goes live right away, under your business name.
+        </p>
+      )}
       <Honeypot />
       <Field label="Event name" htmlFor="title"><Input id="title" name="title" required maxLength={200} /></Field>
       <div className="grid gap-6 sm:grid-cols-3">
@@ -49,9 +113,12 @@ export function EventSubmitForm() {
         <Field label="Address" htmlFor="address"><Input id="address" name="address" /></Field>
       </div>
       <Field label="Link for more info" htmlFor="event_url"><Input id="event_url" name="event_url" type="url" placeholder="https://" /></Field>
-      <Field label="Description" htmlFor="description"><Textarea id="description" name="description" rows={6} required maxLength={5000} /></Field>
+      <Field label="Description" htmlFor="description" hint="What it is, who it's for, and anything people should bring. At least 10 characters.">
+        <Textarea id="description" name="description" rows={6} required minLength={10} maxLength={5000} />
+      </Field>
       <label className="flex items-center gap-3 text-[15px]">
         <input type="checkbox" name="is_job_fair" className="size-5 accent-[#8a5a00]" /> This is a job fair or hiring event
+        <span className="text-muted">(gets a “Job fair” label)</span>
       </label>
       <fieldset className="flex flex-col gap-4 border-t border-line pt-6">
         <legend className="mb-2 text-[15px] font-semibold">Your contact info <span className="font-normal text-muted">(not shown publicly)</span></legend>
@@ -63,25 +130,28 @@ export function EventSubmitForm() {
       <Turnstile resetKey={state} />
       <FormMessage state={state} />
       <div><SubmitButton variant="gold" pendingLabel="Sending…">Submit event for review</SubmitButton></div>
-    </form>
+    </ActionForm>
   );
 }
 
 export function ContactForm({ initialMessage = "" }: { initialMessage?: string }) {
   const [state, action] = useActionState(sendContact, undefined);
+  const me = useSignedInUser();
+  const ref = useRef<HTMLFormElement>(null);
+  usePrefill(ref, me, { name: "name", email: "email" });
   if (state?.ok) return <FormMessage state={state} />;
   return (
-    <form action={action} className="flex max-w-[640px] flex-col gap-6">
+    <ActionForm ref={ref} action={action} className="flex max-w-[640px] flex-col gap-6">
       <Honeypot />
       <div className="grid gap-6 sm:grid-cols-2">
         <Field label="Name" htmlFor="c-name"><Input id="c-name" name="name" autoComplete="name" required /></Field>
         <Field label="Email" htmlFor="c-email"><Input id="c-email" name="email" type="email" autoComplete="email" required /></Field>
       </div>
       <Field label="Phone (optional)" htmlFor="c-phone"><Input id="c-phone" name="phone" type="tel" autoComplete="tel" /></Field>
-      <Field label="Message" htmlFor="c-message"><Textarea id="c-message" name="message" rows={6} required defaultValue={initialMessage} /></Field>
+      <Field label="Message" htmlFor="c-message"><Textarea id="c-message" name="message" rows={6} required minLength={10} defaultValue={initialMessage} /></Field>
       <Turnstile resetKey={state} />
       <FormMessage state={state} />
       <div><SubmitButton pendingLabel="Sending…">Send message</SubmitButton></div>
-    </form>
+    </ActionForm>
   );
 }

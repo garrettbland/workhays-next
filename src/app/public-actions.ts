@@ -7,6 +7,7 @@ import { isBot, verifyTurnstile } from "@/lib/turnstile";
 import { layout, sendEmail } from "@/lib/email";
 import { notifyNewEvent } from "@/lib/notify";
 import { plainToHtml, zonedIso } from "@/lib/events";
+import { formatEventWhen } from "@/lib/format";
 import { SITE } from "@/lib/site";
 import type { ActionState } from "@/components/ui/Form";
 
@@ -66,7 +67,7 @@ const eventSchema = z
     location_name: z.string().trim().min(2, "Where is it?").max(200),
     address: z.string().trim().max(300),
     event_url: z.union([z.literal(""), z.url({ message: "Enter a full web address, starting with https://" })]),
-    description: z.string().trim().min(20, "Add a short description").max(5000),
+    description: z.string().trim().min(10, "Add a short description (at least 10 characters).").max(5000),
     submitter_name: z.string().trim().min(2, "Enter your name").max(120),
     submitter_email: z.email("Enter a valid email address"),
   })
@@ -82,7 +83,7 @@ export async function submitEvent(_: ActionState, form: FormData): Promise<Actio
   const allDay = !d.start_time;
 
   const db = createAdminClient();
-  const { error } = await db.from("events").insert({
+  const { data: created, error } = await db.from("events").insert({
     site_id: SITE.id,
     title: d.title,
     description_html: plainToHtml(d.description),
@@ -96,9 +97,17 @@ export async function submitEvent(_: ActionState, form: FormData): Promise<Actio
     submitter_name: d.submitter_name,
     submitter_email: d.submitter_email.toLowerCase(),
     status: "pending",
-  });
+  }).select("id, starts_at, ends_at").single();
   if (error) return { error: "Something went wrong. Please try again." };
-  await notifyNewEvent({ title: d.title, submittedBy: `${d.submitter_name} (${d.submitter_email})` });
+  const when = formatEventWhen(created.starts_at, created.ends_at, allDay);
+  await notifyNewEvent({
+    eventId: created.id,
+    title: d.title,
+    when: `${when.date}, ${when.time}`,
+    where: d.location_name,
+    description: d.description,
+    submittedBy: `${d.submitter_name} (${d.submitter_email})`,
+  });
   return { ok: "Thanks! A moderator will review your event, usually within a day, and we'll post it once it's approved." };
 }
 

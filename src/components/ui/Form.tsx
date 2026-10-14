@@ -1,9 +1,37 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import type { ReactNode } from "react";
+import { createContext, useContext, useTransition, type ComponentProps, type FormEvent, type ReactNode } from "react";
 
 export type ActionState = { error?: string; ok?: string } | undefined;
+
+const PendingContext = createContext(false);
+
+/**
+ * A <form> for useActionState actions that keeps what people typed when the server sends back
+ * an error. (A plain <form action> is reset by React after every submit, wiping the fields.)
+ * The `action` attribute stays so the form still works before JavaScript loads.
+ */
+export function ActionForm({
+  action,
+  children,
+  ...props
+}: Omit<ComponentProps<"form">, "action" | "onSubmit"> & { action: (form: FormData) => void }) {
+  const [pending, startTransition] = useTransition();
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault(); // React skips its own submit (and the reset) for prevented events
+    const submitter = (e.nativeEvent as SubmitEvent).submitter;
+    const data = new FormData(e.currentTarget, submitter);
+    startTransition(() => action(data));
+  }
+  return (
+    <PendingContext value={pending}>
+      <form {...props} action={action} onSubmit={onSubmit}>
+        {children}
+      </form>
+    </PendingContext>
+  );
+}
 
 export function SubmitButton({
   children,
@@ -20,7 +48,9 @@ export function SubmitButton({
   value?: string;
   className?: string;
 }) {
-  const { pending } = useFormStatus();
+  const status = useFormStatus();
+  const contextPending = useContext(PendingContext);
+  const pending = status.pending || contextPending;
   const styles = {
     primary: "bg-ink text-white hover:bg-black hover:text-white px-5 py-3",
     gold: "bg-gold text-white hover:bg-gold-dark hover:text-white px-5 py-3",

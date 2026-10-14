@@ -3,12 +3,12 @@
 import { useActionState } from "react";
 import { createEvent } from "@/app/dashboard/actions";
 import { Field, Input, Textarea } from "@/components/ui/Field";
-import { FormMessage, SubmitButton } from "@/components/ui/Form";
+import { ActionForm, FormMessage, SubmitButton } from "@/components/ui/Form";
 
 export function EmployerEventForm({ employerId }: { employerId: string }) {
   const [state, action] = useActionState(createEvent, undefined);
   return (
-    <form action={action} className="flex max-w-[760px] flex-col gap-6" key={state?.ok}>
+    <ActionForm action={action} className="flex max-w-[760px] flex-col gap-6" key={state?.ok}>
       <input type="hidden" name="employer_id" value={employerId} />
       <Field label="Event name" htmlFor="ev-title"><Input id="ev-title" name="title" required maxLength={200} /></Field>
       <div className="grid gap-6 sm:grid-cols-3">
@@ -21,12 +21,13 @@ export function EmployerEventForm({ employerId }: { employerId: string }) {
         <Field label="Address" htmlFor="ev-addr"><Input id="ev-addr" name="address" /></Field>
       </div>
       <Field label="Link for more info" htmlFor="ev-url"><Input id="ev-url" name="event_url" type="url" placeholder="https://" /></Field>
-      <Field label="Description" htmlFor="ev-desc"><Textarea id="ev-desc" name="description" rows={5} required /></Field>
+      <Field label="Description" htmlFor="ev-desc"><Textarea id="ev-desc" name="description" rows={5} required minLength={10} /></Field>
       <label className="flex items-center gap-3 text-[15px]">
         <input type="checkbox" name="is_job_fair" className="size-5 accent-[#8a5a00]" /> This is a job fair or hiring event
+        <span className="text-muted">(gets a “Job fair” label)</span>
       </label>
       <FormMessage state={state} />
       <div><SubmitButton variant="gold" pendingLabel="Posting…">Post event</SubmitButton></div>
-    </form>
+    </ActionForm>
   );
 }

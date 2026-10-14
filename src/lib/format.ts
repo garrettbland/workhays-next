@@ -45,3 +45,19 @@ export function formatPay(min: number | null, max: number | null, period: string
 export function isWithinDays(iso: string | null, days: number): boolean {
   return !!iso && Date.parse(iso) < Date.now() + days * 86400_000;
 }
+
+const timeOnly = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZone: SITE.timezone });
+const fullDay = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: SITE.timezone });
+
+/** "Thursday, November 5, 2026" and "4:00 PM – 7:00 PM" (or "All day"). */
+export function formatEventWhen(startsAt: string, endsAt: string | null, allDay: boolean): { date: string; time: string } {
+  const date = fullDay.format(new Date(startsAt));
+  if (allDay) return { date, time: "All day" };
+  const start = timeOnly.format(new Date(startsAt));
+  return { date, time: endsAt ? `${start} – ${timeOnly.format(new Date(endsAt))}` : start };
+}
+
+/** True once a date has passed. Only call from request-time code. */
+export function isPast(iso: string): boolean {
+  return Date.parse(iso) < Date.now();
+}

@@ -3,14 +3,14 @@
 import { useActionState } from "react";
 import { saveEmployer, uploadLogo } from "@/app/dashboard/actions";
 import { Field, Input } from "@/components/ui/Field";
-import { FormMessage, SubmitButton } from "@/components/ui/Form";
+import { ActionForm, FormMessage, SubmitButton } from "@/components/ui/Form";
 import { RichTextEditor } from "@/components/dashboard/RichTextEditor";
 import type { EmployerRow } from "@/lib/dashboard";
 
 export function EmployerProfileForm({ employer }: { employer: EmployerRow }) {
   const [state, action] = useActionState(saveEmployer, undefined);
   return (
-    <form action={action} className="flex max-w-[760px] flex-col gap-6">
+    <ActionForm action={action} className="flex max-w-[760px] flex-col gap-6">
       <input type="hidden" name="employer_id" value={employer.id} />
       <Field label="Business name" htmlFor="name"><Input id="name" name="name" defaultValue={employer.name} required /></Field>
       <div className="grid gap-6 sm:grid-cols-2">
@@ -32,14 +32,14 @@ export function EmployerProfileForm({ employer }: { employer: EmployerRow }) {
       </div>
       <FormMessage state={state} />
       <div><SubmitButton variant="gold" pendingLabel="Saving…">Save profile</SubmitButton></div>
-    </form>
+    </ActionForm>
   );
 }
 
 export function LogoForm({ employerId, logoUrl }: { employerId: string; logoUrl: string | null }) {
   const [state, action] = useActionState(uploadLogo, undefined);
   return (
-    <form action={action} className="flex max-w-[760px] flex-col gap-4">
+    <ActionForm action={action} className="flex max-w-[760px] flex-col gap-4">
       <input type="hidden" name="employer_id" value={employerId} />
       <div className="flex flex-wrap items-center gap-5">
         {logoUrl ? (
@@ -54,6 +54,6 @@ export function LogoForm({ employerId, logoUrl }: { employerId: string; logoUrl:
       </div>
       <FormMessage state={state} />
       <div><SubmitButton variant="secondary" pendingLabel="Uploading…">Upload logo</SubmitButton></div>
-    </form>
+    </ActionForm>
   );
 }

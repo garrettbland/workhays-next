@@ -163,3 +163,37 @@ export async function getUpcomingEvents(siteId: string): Promise<EventListing[]>
   if (error) throw new Error(`Failed to load events: ${error.message}`);
   return data as EventListing[];
 }
+
+export type EventDetail = {
+  id: string;
+  title: string;
+  description_html: string;
+  starts_at: string;
+  ends_at: string | null;
+  all_day: boolean;
+  location_name: string | null;
+  address: string | null;
+  event_url: string | null;
+  image_path: string | null;
+  is_job_fair: boolean;
+  employer: { id: string; name: string; logo_path: string | null } | null;
+};
+
+/** One approved event (past ones too, so shared links keep working). */
+export async function getEvent(id: string): Promise<EventDetail | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("events", `event:${id}`);
+  if (!isUuid(id)) return null;
+  const { data, error } = await createPublicClient()
+    .from("events")
+    .select(
+      "id, title, description_html, starts_at, ends_at, all_day, location_name, address, event_url, image_path, is_job_fair, employer:employers(id, name, logo_path)",
+    )
+    .eq("id", id)
+    .eq("status", "approved")
+    .is("deleted_at", null)
+    .maybeSingle();
+  if (error) throw new Error(`Failed to load event: ${error.message}`);
+  return data as unknown as EventDetail | null;
+}

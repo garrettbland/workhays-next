@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { saveJob } from "@/app/dashboard/actions";
 import { Field, Input, Select } from "@/components/ui/Field";
-import { FormMessage, SubmitButton } from "@/components/ui/Form";
+import { ActionForm, FormMessage, SubmitButton } from "@/components/ui/Form";
 import { RichTextEditor } from "@/components/dashboard/RichTextEditor";
 
 export type JobFormValues = {
@@ -46,7 +46,7 @@ export function JobForm({
   const isLive = values.status === "active";
 
   return (
-    <form action={action} className="flex max-w-[760px] flex-col gap-6">
+    <ActionForm action={action} className="flex max-w-[760px] flex-col gap-6">
       <input type="hidden" name="employer_id" value={employerId} />
       {values.id && <input type="hidden" name="job_id" value={values.id} />}
 
@@ -130,6 +130,6 @@ export function JobForm({
         )}
       </div>
       {!canPublish && !isLive && <p className="text-[14px] text-muted">You can publish once your business is approved.</p>}
-    </form>
+    </ActionForm>
   );
 }

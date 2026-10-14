@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getUpcomingEvents } from "@/lib/data";
 import { formatEventTime } from "@/lib/format";
-import { sanitizeRichText } from "@/lib/sanitize";
+import { toPlainText } from "@/lib/sanitize";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export default async function EventsPage() {
               </p>
               <div className="min-w-0 flex-[1_1_480px]">
                 <h2 className="text-[22px] font-bold">
-                  {ev.title}
+                  <Link href={`/events/${ev.id}`} className="hover:text-gold">{ev.title}</Link>
                   {ev.is_job_fair && <span className="ml-3 align-middle font-mono text-[11px] uppercase tracking-[0.08em] text-gold">Job fair</span>}
                 </h2>
                 <p className="mt-1 text-[15px] text-body">
@@ -43,13 +43,11 @@ export default async function EventsPage() {
                   )}
                 </p>
                 {ev.description_html && (
-                  <div className="rich-text mt-3 text-[16px]" dangerouslySetInnerHTML={{ __html: sanitizeRichText(ev.description_html) }} />
+                  <p className="mt-3 line-clamp-2 max-w-[680px] text-[16px]">{toPlainText(ev.description_html)}</p>
                 )}
-                {ev.event_url && (
-                  <a href={ev.event_url} target="_blank" rel="noopener noreferrer nofollow" className="mt-3 inline-block font-semibold underline underline-offset-[3px]">
-                    Event details ↗
-                  </a>
-                )}
+                <Link href={`/events/${ev.id}`} className="mt-3 inline-block font-semibold underline underline-offset-[3px]">
+                  Details →
+                </Link>
               </div>
             </li>
           ))}
