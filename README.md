@@ -73,6 +73,8 @@ Checks: `npm run lint`, `npm run typecheck`, `npm run db:test` (Supabase CLI + D
 - **Jobs / Employers / Events / Users / Subscribers / Messages:** searchable, filterable lists (filters live in the URL). Employer and event pages show everything before you approve, suspend or take something down.
 - **Ads:** placeholder for featured jobs and ads (Stripe, after launch)
 
+**Roles:** moderators handle approvals, events, jobs, businesses and messages. **Admins** can also manage users (`/admin/users/<id>`: name/email, staff role, business roles, password reset link, reset 2FA, block sign-in, delete) and add people to a business team. Those actions use the service key, so each one re-checks `assertSiteAdmin()` (admin + 2FA) on the server, and every change is written to `audit_log`.
+
 Every admin write is also enforced in the database (RLS and staff-only RPCs), so the pages are a convenience, not the security boundary.
 
 ## Messages inbox

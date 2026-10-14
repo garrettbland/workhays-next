@@ -86,3 +86,12 @@ export function StatusBadge({ status }: { status: string }) {
     : "bg-wash text-body";
   return <span className={`inline-block whitespace-nowrap px-2 py-0.5 font-mono text-[11px] font-medium uppercase tracking-[0.06em] ${tone}`}>{status}</span>;
 }
+
+/** Result of an admin action passed back as ?ok= or ?error=. */
+export function ResultBanner({ sp }: { sp: Record<string, string | string[] | undefined> }) {
+  const ok = typeof sp.ok === "string" ? sp.ok : null;
+  const error = typeof sp.error === "string" ? sp.error : null;
+  if (error) return <p role="alert" className="mb-6 border-l-[3px] border-[#9b1c1c] bg-[#fdf2f2] px-4 py-3 text-[15px] text-[#7a1616]">{error}</p>;
+  if (ok) return <p role="status" className="mb-6 border-l-[3px] border-gold bg-gold-tint px-4 py-3 text-[15px]">{ok}</p>;
+  return null;
+}

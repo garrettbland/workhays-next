@@ -12,16 +12,17 @@ import { assetUrl } from "@/lib/site";
 import { reviewEmployer, setEmployerStatus } from "@/app/admin/actions";
 import { EmployerLogo } from "@/components/EmployerLogo";
 import { Loading } from "@/components/ui/Page";
-import { SectionTitle, StatusBadge, Table, td } from "@/components/admin/List";
+import { ResultBanner, SectionTitle, StatusBadge, Table, td } from "@/components/admin/List";
+import { addTeamMember, setMembership } from "@/app/admin/users/actions";
 
 export const metadata: Metadata = { title: "Employer · Admin", robots: { index: false } };
 
-export default function AdminEmployerPage({ params }: PageProps<"/admin/employers/[id]">) {
+export default function AdminEmployerPage({ params, searchParams }: PageProps<"/admin/employers/[id]">) {
   return (
     <>
       <Link href="/admin/employers" className="font-mono text-[13px] text-muted">← All employers</Link>
       <Suspense fallback={<Loading />}>
-        <EmployerDetail params={params} />
+        <EmployerDetail params={params} searchParams={searchParams} />
       </Suspense>
     </>
   );
@@ -29,9 +30,11 @@ export default function AdminEmployerPage({ params }: PageProps<"/admin/employer
 
 type P = { first_name: string | null; last_name: string | null; email: string } | null;
 
-async function EmployerDetail({ params }: Pick<PageProps<"/admin/employers/[id]">, "params">) {
+async function EmployerDetail({ params, searchParams }: Pick<PageProps<"/admin/employers/[id]">, "params" | "searchParams">) {
   const { id } = await params;
-  await requireStaff(`/admin/employers/${id}`);
+  const sp = await searchParams;
+  const staff = await requireStaff(`/admin/employers/${id}`);
+  const isAdmin = staff.role === "admin";
   if (!isUuid(id)) notFound();
   const supabase = await createClient();
   const [{ data: e, error }, { data: members }, { data: jobs }, { data: events }, { data: log }] = await Promise.all([
@@ -68,6 +71,7 @@ async function EmployerDetail({ params }: Pick<PageProps<"/admin/employers/[id]"
 
   return (
     <div className="mt-6">
+      <ResultBanner sp={sp} />
       <div className="flex flex-wrap items-center gap-4">
         <EmployerLogo src={assetUrl(e.logo_path)} name={e.name} size={56} />
         <h1 className="condensed text-[34px] sm:text-[44px]">{e.name}</h1>
@@ -96,14 +100,47 @@ async function EmployerDetail({ params }: Pick<PageProps<"/admin/employers/[id]"
                 const pr = m.profile as unknown as P & { id: string };
                 return (
                   <tr key={pr?.id}>
-                    <td className={td}>{personName(pr)}</td>
+                    <td className={td}><Link href={`/admin/users/${pr?.id}`} className="font-semibold hover:text-gold">{personName(pr)}</Link></td>
                     <td className={td}><a href={`mailto:${pr?.email}`} className="underline">{pr?.email}</a></td>
-                    <td className={`${td} capitalize`}>{m.role}</td>
+                    <td className={td}>
+                      {isAdmin ? (
+                        <form action={setMembership} className="flex flex-wrap items-center gap-2">
+                          <input type="hidden" name="user_id" value={pr?.id} />
+                          <input type="hidden" name="employer_id" value={e.id} />
+                          <input type="hidden" name="back" value={`/admin/employers/${e.id}`} />
+                          <select name="role" defaultValue={m.role} aria-label={`Role for ${pr?.email}`} className="h-9 border-[1.5px] border-ink bg-paper px-2 text-[14px]">
+                            <option value="owner">Owner</option>
+                            <option value="admin">Admin</option>
+                            <option value="member">Member</option>
+                            {m.role !== "owner" && <option value="remove">Remove from business</option>}
+                          </select>
+                          <button className="text-[14px] font-semibold underline underline-offset-[3px]">Save</button>
+                        </form>
+                      ) : <span className="capitalize">{m.role}</span>}
+                    </td>
                     <td className={`${td} text-body`}>{formatShortDate(m.created_at)}</td>
                   </tr>
                 );
               })}
             </Table>
+            {isAdmin && (
+              <form action={addTeamMember} className="mt-4 flex flex-wrap items-end gap-3">
+                <input type="hidden" name="employer_id" value={e.id} />
+                <label className="flex min-w-0 flex-[1_1_240px] flex-col gap-1 text-[13px] font-semibold">
+                  Add a team member (existing account email)
+                  <input name="email" type="email" required className="h-11 border-[1.5px] border-ink px-3 text-[15px] font-normal" />
+                </label>
+                <label className="flex flex-col gap-1 text-[13px] font-semibold">
+                  Role
+                  <select name="role" defaultValue="member" className="h-11 border-[1.5px] border-ink bg-paper px-3 text-[15px] font-normal">
+                    <option value="member">Member</option>
+                    <option value="admin">Admin</option>
+                    <option value="owner">Owner</option>
+                  </select>
+                </label>
+                <button className="h-11 border-[1.5px] border-ink px-4 font-semibold hover:text-gold">Add</button>
+              </form>
+            )}
           </section>
 
           <section className="mt-10">

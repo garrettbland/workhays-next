@@ -7,7 +7,7 @@ import { ilike, listParams, personName } from "@/lib/admin";
 import { formatShortDate } from "@/lib/format";
 import { SITE } from "@/lib/site";
 import { Loading } from "@/components/ui/Page";
-import { Pager, ResultCount, StatusBadge, Table, td, Toolbar } from "@/components/admin/List";
+import { Pager, ResultBanner, ResultCount, StatusBadge, Table, td, Toolbar } from "@/components/admin/List";
 
 export const metadata: Metadata = { title: "Users · Admin", robots: { index: false } };
 
@@ -24,7 +24,8 @@ export default function AdminUsersPage({ searchParams }: PageProps<"/admin/users
 
 async function UsersList({ searchParams }: Pick<PageProps<"/admin/users">, "searchParams">) {
   await requireStaff("/admin/users");
-  const p = listParams(await searchParams);
+  const sp = await searchParams;
+  const p = listParams(sp);
   const supabase = await createClient();
 
   const members = p.status === "business" ? "employer_members!employer_members_user_id_fkey!inner" : "employer_members!employer_members_user_id_fkey";
@@ -44,6 +45,7 @@ async function UsersList({ searchParams }: Pick<PageProps<"/admin/users">, "sear
   };
   return (
     <>
+      <ResultBanner sp={sp} />
       <Toolbar
         q={p.q}
         status={p.status}
@@ -62,7 +64,7 @@ async function UsersList({ searchParams }: Pick<PageProps<"/admin/users">, "sear
           const businesses = u.employer_members.filter((m) => m.employer?.site_id === SITE.id);
           return (
             <tr key={u.id}>
-              <td className={`${td} font-semibold`}>{personName(u)}</td>
+              <td className={td}><Link href={`/admin/users/${u.id}`} className="font-semibold hover:text-gold">{personName(u)}</Link></td>
               <td className={td}><a href={`mailto:${u.email}`} className="underline">{u.email}</a></td>
               <td className={td}>
                 {businesses.length ? businesses.map((m, i) => (

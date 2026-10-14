@@ -108,6 +108,7 @@ function friendly(message: string): string {
   if (m.includes("invalid login")) return "That email and password don't match. Try again or reset your password.";
   if (m.includes("email not confirmed")) return "Please confirm your email first. Check your inbox for the link we sent.";
   if (m.includes("already registered") || m.includes("already been registered")) return "There's already an account with that email. Try signing in.";
+  if (m.includes("banned")) return "This account has been blocked. If you think that's a mistake, contact us through the contact page.";
   if (m.includes("captcha")) return "Please complete the verification check and try again.";
   if (m.includes("rate limit") || m.includes("too many")) return "Too many attempts. Please wait a few minutes and try again.";
   if (m.includes("weak") || m.includes("password")) return message;
