@@ -24,6 +24,8 @@
   a { color: inherit; text-decoration: none; }
   a:hover { color: var(--color-gold); }
   :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+  /* Tailwind resets buttons to the arrow cursor; show the hand on anything clickable. */
+  button:not(:disabled), [role="button"], select, summary, label:has(> input[type="checkbox"]) { cursor: pointer; }
 }
 
 @utility condensed {

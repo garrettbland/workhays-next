@@ -25,7 +25,7 @@ export default function AdminMessagesPage({ searchParams }: PageProps<"/admin/me
 
 async function Messages({ searchParams }: Pick<PageProps<"/admin/messages">, "searchParams">) {
   await requireStaff("/admin/messages");
-  const p = listParams(await searchParams, "new");
+  const p = listParams(await searchParams);
   const supabase = await createClient();
   let query = supabase.from("contact_messages").select("id, name, email, phone, message, status, created_at", { count: "exact" }).eq("site_id", SITE.id);
   if (p.status !== "all") query = query.eq("status", p.status);
@@ -41,10 +41,10 @@ async function Messages({ searchParams }: Pick<PageProps<"/admin/messages">, "se
         status={p.status}
         placeholder="Name, email or text"
         statuses={[
+          { value: "all", label: "All" },
           { value: "new", label: "New" },
           { value: "handled", label: "Handled" },
           { value: "spam", label: "Spam" },
-          { value: "all", label: "All" },
         ]}
       />
       <ResultCount count={count ?? 0} page={p.page} />

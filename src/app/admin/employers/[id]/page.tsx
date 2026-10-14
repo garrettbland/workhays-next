@@ -112,7 +112,7 @@ async function EmployerDetail({ params }: Pick<PageProps<"/admin/employers/[id]"
               {(jobs ?? []).map((j) => (
                 <tr key={j.id}>
                   <td className={td}>
-                    {j.status === "active" ? <Link href={`/jobs/${j.id}`} className="font-semibold hover:text-gold">{j.title}</Link> : <span className="font-semibold">{j.title}</span>}
+                    <Link href={`/admin/jobs/${j.id}`} className="font-semibold hover:text-gold">{j.title}</Link>
                     {j.auto_renew && <span className="ml-2 font-mono text-[11px] uppercase text-muted">auto-renew</span>}
                   </td>
                   <td className={td}><StatusBadge status={j.status} /></td>

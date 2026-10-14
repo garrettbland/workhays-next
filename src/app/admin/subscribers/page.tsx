@@ -24,7 +24,7 @@ export default function AdminSubscribersPage({ searchParams }: PageProps<"/admin
 
 async function SubscribersList({ searchParams }: Pick<PageProps<"/admin/subscribers">, "searchParams">) {
   await requireStaff("/admin/subscribers");
-  const p = listParams(await searchParams, "confirmed");
+  const p = listParams(await searchParams);
   const supabase = await createClient();
   let query = supabase.from("subscribers").select("id, email, status, source, created_at, confirmed_at, unsubscribed_at", { count: "exact" }).eq("site_id", SITE.id);
   if (p.status !== "all") query = query.eq("status", p.status);
@@ -39,10 +39,10 @@ async function SubscribersList({ searchParams }: Pick<PageProps<"/admin/subscrib
         status={p.status}
         placeholder="Email"
         statuses={[
+          { value: "all", label: "All" },
           { value: "confirmed", label: "Confirmed" },
           { value: "pending", label: "Not confirmed yet" },
           { value: "unsubscribed", label: "Unsubscribed" },
-          { value: "all", label: "All" },
         ]}
       />
       <ResultCount count={count ?? 0} page={p.page} />

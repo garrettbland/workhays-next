@@ -28,7 +28,7 @@ async function EventsList({ searchParams }: Pick<PageProps<"/admin/events">, "se
   await connection();
   const sp = await searchParams;
   const p = listParams(sp);
-  const when = (Array.isArray(sp.when) ? sp.when[0] : sp.when) || "upcoming";
+  const when = (Array.isArray(sp.when) ? sp.when[0] : sp.when) || "all";
   const supabase = await createClient();
 
   let query = supabase
@@ -44,7 +44,7 @@ async function EventsList({ searchParams }: Pick<PageProps<"/admin/events">, "se
   if (when === "upcoming") query = query.gte("starts_at", dayAgo);
   if (when === "past") query = query.lt("starts_at", now);
   if (p.q) query = query.ilike("title", ilike(p.q));
-  query = when === "past" ? query.order("starts_at", { ascending: false }) : query.order("starts_at");
+  query = when === "upcoming" ? query.order("starts_at") : query.order("starts_at", { ascending: false });
   const { data, count, error } = await query.range(p.from, p.to);
   if (error) throw new Error(error.message);
 
@@ -65,9 +65,9 @@ async function EventsList({ searchParams }: Pick<PageProps<"/admin/events">, "se
           <label className="flex flex-col gap-1 text-[13px] font-semibold">
             When
             <select name="when" defaultValue={when} className="h-11 border-[1.5px] border-ink bg-paper px-3 text-[15px] font-normal">
+              <option value="all">Any time</option>
               <option value="upcoming">Upcoming</option>
               <option value="past">Past</option>
-              <option value="all">Any time</option>
             </select>
           </label>
         }

@@ -25,7 +25,7 @@ export default function AdminJobsPage({ searchParams }: PageProps<"/admin/jobs">
 
 async function JobsList({ searchParams }: Pick<PageProps<"/admin/jobs">, "searchParams">) {
   await requireStaff("/admin/jobs");
-  const p = listParams(await searchParams, "active");
+  const p = listParams(await searchParams);
   const supabase = await createClient();
 
   let query = supabase
@@ -51,12 +51,12 @@ async function JobsList({ searchParams }: Pick<PageProps<"/admin/jobs">, "search
         status={p.status}
         placeholder="Job title or business"
         statuses={[
+          { value: "all", label: "All" },
           { value: "active", label: "Live" },
           { value: "draft", label: "Drafts" },
           { value: "expired", label: "Expired" },
           { value: "filled", label: "Filled" },
           { value: "archived", label: "Taken down" },
-          { value: "all", label: "All" },
         ]}
       />
       <ResultCount count={count ?? 0} page={p.page} />
@@ -66,7 +66,7 @@ async function JobsList({ searchParams }: Pick<PageProps<"/admin/jobs">, "search
           return (
             <tr key={j.id}>
               <td className={td}>
-                {j.status === "active" ? <Link href={`/jobs/${j.id}`} className="font-semibold hover:text-gold">{j.title}</Link> : <span className="font-semibold">{j.title}</span>}
+                <Link href={`/admin/jobs/${j.id}`} className="font-semibold hover:text-gold">{j.title}</Link>
                 {j.auto_renew && <span className="ml-2 font-mono text-[11px] uppercase text-muted">auto-renew</span>}
               </td>
               <td className={td}><Link href={`/admin/employers/${emp.id}`} className="underline underline-offset-[3px]">{emp.name}</Link></td>
