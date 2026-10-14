@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/server";
 import { ilike, listParams } from "@/lib/admin";
 import { formatShortDate, JOB_TYPE_LABELS } from "@/lib/format";
 import { SITE } from "@/lib/site";
-import { closeJobAsStaff } from "@/app/admin/actions";
 import { Loading } from "@/components/ui/Page";
 import { Pager, ResultCount, StatusBadge, Table, td, Toolbar } from "@/components/admin/List";
 
@@ -76,10 +75,7 @@ async function JobsList({ searchParams }: Pick<PageProps<"/admin/jobs">, "search
               <td className={`${td} whitespace-nowrap text-body`}>{formatShortDate(j.expires_at)}</td>
               <td className={`${td} text-right`}>
                 {j.status === "active" && (
-                  <form action={closeJobAsStaff}>
-                    <input type="hidden" name="job_id" value={j.id} />
-                    <button className="whitespace-nowrap text-[14px] text-[#9b1c1c] underline underline-offset-[3px]">Take down</button>
-                  </form>
+                      <Link href={`/admin/jobs/${j.id}#status`} className="whitespace-nowrap text-[14px] text-[#9b1c1c] underline underline-offset-[3px]">Take down…</Link>
                 )}
               </td>
             </tr>

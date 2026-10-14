@@ -9,7 +9,7 @@ import { isUuid } from "@/lib/data";
 import { formatEventTime, formatLongDate, formatShortDate } from "@/lib/format";
 import { sanitizeRichText } from "@/lib/sanitize";
 import { assetUrl } from "@/lib/site";
-import { closeJobAsStaff, reviewEmployer, setEmployerStatus } from "@/app/admin/actions";
+import { reviewEmployer, setEmployerStatus } from "@/app/admin/actions";
 import { EmployerLogo } from "@/components/EmployerLogo";
 import { Loading } from "@/components/ui/Page";
 import { SectionTitle, StatusBadge, Table, td } from "@/components/admin/List";
@@ -120,10 +120,7 @@ async function EmployerDetail({ params }: Pick<PageProps<"/admin/employers/[id]"
                   <td className={`${td} text-body`}>{formatShortDate(j.expires_at)}</td>
                   <td className={`${td} text-right`}>
                     {j.status === "active" && (
-                      <form action={closeJobAsStaff}>
-                        <input type="hidden" name="job_id" value={j.id} />
-                        <button className="text-[14px] text-[#9b1c1c] underline underline-offset-[3px]">Take down</button>
-                      </form>
+                      <Link href={`/admin/jobs/${j.id}#status`} className="whitespace-nowrap text-[14px] text-[#9b1c1c] underline underline-offset-[3px]">Take down…</Link>
                     )}
                   </td>
                 </tr>

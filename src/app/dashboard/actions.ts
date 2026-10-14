@@ -10,6 +10,7 @@ import { SITE } from "@/lib/site";
 import { notifyEventPosted, notifyNewEmployer, sendTeamInvite } from "@/lib/notify";
 import { formatEventWhen } from "@/lib/format";
 import { plainToHtml, zonedIso } from "@/lib/events";
+import { parseJobFields } from "@/lib/job-fields";
 import type { ActionState } from "@/components/ui/Form";
 
 /** Every action re-checks the session; row-level security in the database is the real gate. */
@@ -116,57 +117,15 @@ export async function uploadLogo(_: ActionState, form: FormData): Promise<Action
 // Jobs
 // ---------------------------------------------------------------------------
 
-const money = z.union([z.literal(""), z.coerce.number().min(0).max(10_000_000)]);
-const jobSchema = z
-  .object({
-    title: z.string().trim().min(3, "Enter a job title").max(200),
-    job_type: z.enum(["full_time", "part_time", "contract", "temporary", "seasonal", "internship"]),
-    industry: z.string().trim().max(80),
-    location: z.string().trim().max(120),
-    pay_min: money,
-    pay_max: money,
-    pay_period: z.union([z.literal(""), z.enum(["hour", "week", "month", "year"])]),
-    application_url: url,
-    application_email: z.union([z.literal(""), z.email("Enter a valid application email")]),
-    description_html: z.string().max(100_000),
-  })
-  .refine((d) => d.application_url || d.application_email, {
-    message: "Add a link or an email address where people can apply.",
-  })
-  .refine((d) => d.pay_min === "" || d.pay_max === "" || Number(d.pay_max) >= Number(d.pay_min), {
-    message: "The maximum pay should be more than the minimum.",
-  });
-
 export async function saveJob(_: ActionState, form: FormData): Promise<ActionState> {
   const { supabase } = await session();
   const employerId = str(form, "employer_id");
   const jobId = str(form, "job_id");
   const intent = str(form, "intent"); // "publish" | "draft" | "save"
 
-  const raw = Object.fromEntries(
-    ["title", "job_type", "industry", "location", "pay_min", "pay_max", "pay_period", "application_url", "application_email", "description_html"].map(
-      (k) => [k, str(form, k)],
-    ),
-  );
-  const parsed = jobSchema.safeParse(raw);
-  if (!parsed.success) return { error: parsed.error.issues[0].message };
-  const d = parsed.data;
-  const description = sanitizeRichText(d.description_html);
-  if (toPlainText(description).length < 30) return { error: "Add a description of at least a couple of sentences." };
-
-  const fields = {
-    title: d.title,
-    job_type: d.job_type,
-    industry: optional(d.industry),
-    location: optional(d.location),
-    pay_min: d.pay_min === "" ? null : d.pay_min,
-    pay_max: d.pay_max === "" ? null : d.pay_max,
-    pay_period: d.pay_min === "" && d.pay_max === "" ? null : optional(d.pay_period) ?? "hour",
-    application_url: optional(d.application_url),
-    application_email: optional(d.application_email.toLowerCase()),
-    description_html: description,
-    auto_renew: form.get("auto_renew") === "on",
-  };
+  const parsed = parseJobFields(form);
+  if ("error" in parsed) return { error: parsed.error };
+  const fields = parsed.fields;
 
   if (jobId) {
     const update = intent === "publish" ? { ...fields, status: "active" } : fields;

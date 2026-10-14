@@ -99,6 +99,40 @@ export async function notifyEmployerReviewed(opts: { employerId: string; name: s
   });
 }
 
+/** Tells a business that staff took a job down or put it back up, with an optional note. */
+export async function notifyJobChangedByStaff(opts: {
+  jobId: string; title: string; employerId: string; createdBy: string | null;
+  change: "taken_down" | "restored"; message: string | null; replyTo?: string;
+}) {
+  const admin = createAdminClient();
+  const to = new Set(await ownerEmails(opts.employerId));
+  if (opts.createdBy) {
+    const { data } = await admin.from("profiles").select("email").eq("id", opts.createdBy).maybeSingle();
+    if (data?.email) to.add(data.email);
+  }
+  if (!to.size) return;
+  const note = opts.message ? [`Note from ${SITE.name}: ${opts.message}`] : [];
+  const { html, text } =
+    opts.change === "taken_down"
+      ? layout({
+          heading: `We took down “${opts.title}”`,
+          paragraphs: [`Your job listing is no longer on ${SITE.name}.`, ...note, "Questions? Reply to this email."],
+          button: { label: "Open your dashboard", url: `${SITE.url}/dashboard/${opts.employerId}` },
+        })
+      : layout({
+          heading: `“${opts.title}” is back up`,
+          paragraphs: [`Your job listing is live on ${SITE.name} again.`, ...note],
+          button: { label: "View the job", url: `${SITE.url}/jobs/${opts.jobId}` },
+        });
+  await sendEmail({
+    to: [...to],
+    subject: opts.change === "taken_down" ? `Your job “${opts.title}” was taken down` : `Your job “${opts.title}” is live again`,
+    html,
+    text,
+    replyTo: opts.replyTo,
+  });
+}
+
 export async function sendTeamInvite(opts: { email: string; employerName: string; invitedBy: string; role: string; token: string }) {
   const { html, text } = layout({
     heading: `Join ${opts.employerName} on ${SITE.name}`,

@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { saveJob } from "@/app/dashboard/actions";
+import { adminSaveJob } from "@/app/admin/actions";
 import { Field, Input, Select } from "@/components/ui/Field";
 import { ActionForm, FormMessage, SubmitButton } from "@/components/ui/Form";
 import { RichTextEditor } from "@/components/dashboard/RichTextEditor";
@@ -36,14 +37,17 @@ export function JobForm({
   values,
   industries,
   canPublish,
+  admin = false,
 }: {
   employerId: string;
   values: JobFormValues;
   industries: { slug: string; name: string }[];
   canPublish: boolean;
+  /** Staff editing from /admin: saves content only and returns to the admin job page. */
+  admin?: boolean;
 }) {
-  const [state, action] = useActionState(saveJob, undefined);
-  const isLive = values.status === "active";
+  const [state, action] = useActionState(admin ? adminSaveJob : saveJob, undefined);
+  const isLive = admin || values.status === "active";
 
   return (
     <ActionForm action={action} className="flex max-w-[760px] flex-col gap-6">
@@ -129,7 +133,7 @@ export function JobForm({
           </>
         )}
       </div>
-      {!canPublish && !isLive && <p className="text-[14px] text-muted">You can publish once your business is approved.</p>}
+      {!admin && !canPublish && !isLive && <p className="text-[14px] text-muted">You can publish once your business is approved.</p>}
     </ActionForm>
   );
 }

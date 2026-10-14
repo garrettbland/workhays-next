@@ -4,7 +4,10 @@ import { redirect } from "next/navigation";
 import { refresh, updateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth";
-import { notifyEmployerReviewed, notifyEventReviewed } from "@/lib/notify";
+import { notifyEmployerReviewed, notifyEventReviewed, notifyJobChangedByStaff } from "@/lib/notify";
+import { parseJobFields } from "@/lib/job-fields";
+import { zonedIso } from "@/lib/events";
+import type { ActionState } from "@/components/ui/Form";
 
 // Every write below is also checked in the database (RLS / staff-only RPCs), so a
 // signed-in non-staff user calling these gets an error, not a change.
@@ -80,14 +83,80 @@ export async function removeEvent(form: FormData): Promise<void> {
   refresh();
 }
 
-/** Takes a job down: "filled" if the business asked, "archived" for policy removals. */
-export async function closeJobAsStaff(form: FormData): Promise<void> {
+async function jobForNotice(supabase: Awaited<ReturnType<typeof createClient>>, jobId: string) {
+  const { data } = await supabase.from("jobs").select("id, title, employer_id, created_by, status").eq("id", jobId).single();
+  return data;
+}
+
+/** Takes a job off the site ("archived"). Optionally emails the business, with an optional note. */
+export async function takeDownJob(form: FormData): Promise<void> {
   const supabase = await session();
-  const status = form.get("status") === "filled" ? "filled" : "archived";
-  const { error } = await supabase.rpc("close_job", { p_job_id: str(form, "job_id"), p_status: status });
+  const jobId = str(form, "job_id");
+  const { error } = await supabase.rpc("close_job", { p_job_id: jobId, p_status: "archived" });
+  if (error) throw new Error(error.message);
+  const job = await jobForNotice(supabase, jobId);
+  if (job && form.get("notify") === "on") {
+    const me = await getUser();
+    await notifyJobChangedByStaff({
+      jobId, title: job.title, employerId: job.employer_id, createdBy: job.created_by,
+      change: "taken_down", message: str(form, "message") || null, replyTo: me?.email,
+    });
+  }
+  updateTag("jobs");
+  updateTag(`job:${jobId}`);
+  if (job) updateTag(`employer:${job.employer_id}`);
+  refresh();
+}
+
+/** Puts a job back up. If its old expiry has passed, it gets a fresh posting period. */
+export async function restoreJob(form: FormData): Promise<void> {
+  const supabase = await session();
+  const jobId = str(form, "job_id");
+  const { error } = await supabase.from("jobs").update({ status: "active" }).eq("id", jobId);
+  if (error) throw new Error(error.message);
+  const job = await jobForNotice(supabase, jobId);
+  if (job && form.get("notify") === "on") {
+    const me = await getUser();
+    await notifyJobChangedByStaff({
+      jobId, title: job.title, employerId: job.employer_id, createdBy: job.created_by,
+      change: "restored", message: str(form, "message") || null, replyTo: me?.email,
+    });
+  }
+  updateTag("jobs");
+  updateTag(`job:${jobId}`);
+  if (job) updateTag(`employer:${job.employer_id}`);
+  refresh();
+}
+
+/** Staff can set a job's expiry date directly (end of that day, Central time). */
+export async function setJobExpiry(form: FormData): Promise<void> {
+  const supabase = await session();
+  const jobId = str(form, "job_id");
+  const date = str(form, "expires_on");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("Choose a date");
+  const { error } = await supabase
+    .from("jobs")
+    .update({ expires_at: zonedIso(date, "23:59"), expiry_reminder_sent_at: null })
+    .eq("id", jobId);
   if (error) throw new Error(error.message);
   updateTag("jobs");
+  updateTag(`job:${jobId}`);
   refresh();
+}
+
+/** Staff edits to a job's content. Status is changed with the take down / put back up actions. */
+export async function adminSaveJob(_: ActionState, form: FormData): Promise<ActionState> {
+  const supabase = await session();
+  const jobId = str(form, "job_id");
+  const parsed = parseJobFields(form);
+  if ("error" in parsed) return { error: parsed.error };
+  const { data, error } = await supabase.from("jobs").update(parsed.fields).eq("id", jobId).select("id, employer_id");
+  if (error) return { error: "Couldn't save the job. Please try again." };
+  if (!data?.length) return { error: "Job not found." };
+  updateTag("jobs");
+  updateTag(`job:${jobId}`);
+  updateTag(`employer:${data[0].employer_id}`);
+  redirect(`/admin/jobs/${jobId}?saved=1`);
 }
 
 export async function setMessageStatus(form: FormData): Promise<void> {
