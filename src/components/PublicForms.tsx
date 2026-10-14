@@ -26,7 +26,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
         <Input id={compact ? "nl-email-c" : "nl-email"} name="email" type="email" required placeholder="you@example.com" className="min-w-0 flex-[1_1_220px]" />
         <SubmitButton pendingLabel="…">Subscribe</SubmitButton>
       </div>
-      <Turnstile />
+      <Turnstile resetKey={state} compact />
       <FormMessage state={state} />
     </form>
   );
@@ -60,7 +60,7 @@ export function EventSubmitForm() {
           <Field label="Your email" htmlFor="submitter_email"><Input id="submitter_email" name="submitter_email" type="email" required /></Field>
         </div>
       </fieldset>
-      <Turnstile />
+      <Turnstile resetKey={state} />
       <FormMessage state={state} />
       <div><SubmitButton variant="gold" pendingLabel="Sending…">Submit event for review</SubmitButton></div>
     </form>
@@ -79,7 +79,7 @@ export function ContactForm({ initialMessage = "" }: { initialMessage?: string }
       </div>
       <Field label="Phone (optional)" htmlFor="c-phone"><Input id="c-phone" name="phone" type="tel" autoComplete="tel" /></Field>
       <Field label="Message" htmlFor="c-message"><Textarea id="c-message" name="message" rows={6} required defaultValue={initialMessage} /></Field>
-      <Turnstile />
+      <Turnstile resetKey={state} />
       <FormMessage state={state} />
       <div><SubmitButton pendingLabel="Sending…">Send message</SubmitButton></div>
     </form>

@@ -37,7 +37,7 @@ export function SignUpForm() {
       <Field label="Password" htmlFor="password" hint="At least 10 characters.">
         <Input id="password" name="password" type="password" autoComplete="new-password" minLength={10} required />
       </Field>
-      <Turnstile />
+      <Turnstile resetKey={state} />
       <FormMessage state={state} />
       <SubmitButton variant="gold" pendingLabel="Creating account…">Create account</SubmitButton>
       <p className="text-[14px] text-muted">
@@ -57,7 +57,7 @@ export function SignInForm() {
       <Field label="Password" htmlFor="password" hint={<Link href="/forgot-password" className="underline">Forgot your password?</Link>}>
         <Input id="password" name="password" type="password" autoComplete="current-password" required />
       </Field>
-      <Turnstile />
+      <Turnstile resetKey={state} />
       <FormMessage state={state} />
       <SubmitButton pendingLabel="Signing in…">Sign in</SubmitButton>
     </form>
@@ -85,7 +85,7 @@ export function ForgotForm() {
   return (
     <form action={action} className="flex flex-col gap-5">
       <Field label="Email" htmlFor="email"><Input id="email" name="email" type="email" autoComplete="email" required /></Field>
-      <Turnstile />
+      <Turnstile resetKey={state} />
       <FormMessage state={state} />
       <SubmitButton pendingLabel="Sending…">Send reset link</SubmitButton>
     </form>
