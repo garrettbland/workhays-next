@@ -8,13 +8,16 @@ export type Email = {
   text: string;
   replyTo?: string;
   headers?: Record<string, string>;
+  /** Display name for the From line (the address stays the site's sending address). */
+  fromName?: string;
 };
 
 const FROM = process.env.EMAIL_FROM || "Work Hays <hello@mail.workhays.com>";
 
 function payload(email: Email) {
+  const address = FROM.match(/<([^>]+)>/)?.[1] ?? FROM;
   return {
-    from: FROM,
+    from: email.fromName ? `${email.fromName.replace(/["<>]/g, "")} <${address}>` : FROM,
     to: Array.isArray(email.to) ? email.to : [email.to],
     subject: email.subject,
     html: email.html,
@@ -28,13 +31,14 @@ function payload(email: Email) {
  * Sends through Resend's HTTP API. Without RESEND_API_KEY (local dev), emails are printed
  * to the server log instead, so every flow still works end to end.
  */
-export async function sendEmail(email: Email): Promise<void> {
+export async function sendEmail(email: Email): Promise<boolean> {
   const to = Array.isArray(email.to) ? email.to : [email.to];
-  if (to.length === 0) return;
+  if (to.length === 0) return false;
   const key = process.env.RESEND_API_KEY;
   if (!key) {
-    console.info(`\n[email:dev] To: ${to.join(", ")}\nSubject: ${email.subject}\n\n${email.text}\n`);
-    return;
+    const extra = [email.replyTo && `Reply-To: ${email.replyTo}`, email.fromName && `From: ${email.fromName}`].filter(Boolean).join("\n");
+    console.info(`\n[email:dev] To: ${to.join(", ")}\nSubject: ${email.subject}${extra ? `\n${extra}` : ""}\n\n${email.text}\n`);
+    return true;
   }
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -44,7 +48,9 @@ export async function sendEmail(email: Email): Promise<void> {
   if (!res.ok) {
     // Never fail the user's action because an email didn't send; log for follow-up.
     console.error(`[email] Resend error ${res.status}: ${await res.text()}`);
+    return false;
   }
+  return true;
 }
 
 /** Many individual emails (e.g. the weekly digest), 100 per Resend batch request. */

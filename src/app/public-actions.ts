@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { isBot, verifyTurnstile } from "@/lib/turnstile";
 import { layout, sendEmail } from "@/lib/email";
 import { notifyNewEvent } from "@/lib/notify";
+import { conversationAddress } from "@/lib/inbox";
 import { plainToHtml, zonedIso } from "@/lib/events";
 import { formatEventWhen } from "@/lib/format";
 import { SITE } from "@/lib/site";
@@ -134,14 +135,23 @@ export async function sendContact(_: ActionState, form: FormData): Promise<Actio
   const d = parsed.data;
 
   const db = createAdminClient();
-  await db.from("contact_messages").insert({ site_id: SITE.id, name: d.name, email: d.email, phone: d.phone || null, message: d.message });
+  const { data: saved } = await db
+    .from("contact_messages")
+    .insert({ site_id: SITE.id, name: d.name, email: d.email.toLowerCase(), phone: d.phone || null, message: d.message })
+    .select("id, reply_token")
+    .single();
   const { data: staff } = await db.from("site_staff").select("profiles(email)").eq("site_id", SITE.id);
   const to = (staff ?? []).map((r) => (r.profiles as unknown as { email: string } | null)?.email).filter((e): e is string => !!e);
+  // Staff reply on the website (or to this email, which is relayed through the conversation).
+  const convoAddress = saved ? conversationAddress(saved.reply_token) : null;
   const { html, text } = layout({
     heading: `Message from ${d.name}`,
     paragraphs: [d.message, `${d.email}${d.phone ? ` · ${d.phone}` : ""}`],
-    footer: "Reply to this email to answer them directly.",
+    button: saved ? { label: "Reply on the website", url: `${SITE.url}/admin/messages/${saved.id}` } : undefined,
+    footer: convoAddress
+      ? "Reply on the website, or reply to this email and we'll send it to them for you."
+      : "Reply on the website to keep the conversation together.",
   });
-  await sendEmail({ to, subject: `[${SITE.name}] Contact: ${d.name}`, html, text, replyTo: d.email });
+  await sendEmail({ to, subject: `[${SITE.name}] Contact: ${d.name}`, html, text, replyTo: convoAddress ?? d.email });
   return { ok: "Thanks, we got your message and will get back to you soon." };
 }

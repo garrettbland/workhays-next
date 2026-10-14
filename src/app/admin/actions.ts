@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth";
 import { notifyEmployerReviewed, notifyEmployerStatusByStaff, notifyEventReviewed, notifyJobChangedByStaff } from "@/lib/notify";
 import { parseJobFields } from "@/lib/job-fields";
+import { sendConversationReply, type Conversation } from "@/lib/inbox";
 import { zonedIso } from "@/lib/events";
 import type { ActionState } from "@/components/ui/Form";
 
@@ -159,4 +160,25 @@ export async function setMessageStatus(form: FormData): Promise<void> {
   const { error } = await supabase.from("contact_messages").update({ status }).eq("id", str(form, "message_id"));
   if (error) throw new Error(error.message);
   refresh();
+}
+
+/** Reply to a contact message from the admin. The email goes from the site, with the conversation's reply address. */
+export async function replyToMessage(_: ActionState, form: FormData): Promise<ActionState> {
+  const supabase = await session();
+  const me = await getUser();
+  if (!me) return { error: "Please sign in again." };
+  const body = str(form, "body");
+  if (body.length < 2) return { error: "Write a reply first." };
+  if (body.length > 10_000) return { error: "That reply is too long." };
+  const { data: convo } = await supabase
+    .from("contact_messages")
+    .select("id, site_id, name, email, message, created_at, reply_token")
+    .eq("id", str(form, "message_id"))
+    .maybeSingle();
+  if (!convo) return { error: "Message not found." };
+  const { data: profile } = await supabase.from("profiles").select("first_name").eq("id", me.id).single();
+  const result = await sendConversationReply(supabase, convo as Conversation, { id: me.id, firstName: profile?.first_name ?? null }, body);
+  if ("error" in result) return result;
+  refresh();
+  return { ok: `Reply sent to ${convo.email}.` };
 }

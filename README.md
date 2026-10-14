@@ -75,6 +75,20 @@ Checks: `npm run lint`, `npm run typecheck`, `npm run db:test` (Supabase CLI + D
 
 Every admin write is also enforced in the database (RLS and staff-only RPCs), so the pages are a convenience, not the security boundary.
 
+## Messages inbox
+
+Contact-form messages are conversations in **Admin → Messages**. Staff reply on the website; the email goes from the site with a private reply address, `c-<token>@INBOUND_EMAIL_DOMAIN`, so the person's email reply comes back into the same conversation (Resend Inbound → `POST /api/inbound`).
+
+- Staff can also answer an alert email from their own inbox: the reply is relayed to the person and saved.
+- Mail to any other address on the inbound domain gets one "please use the contact form" auto-reply per sender per day. Bounces, out-of-office and list mail are ignored; mail from Cloudflare or Resend (e.g. a forwarding confirmation) is forwarded to staff.
+- Replies to a conversation marked spam are dropped.
+- Attachments stay in Resend; staff download them through `/api/admin/attachment`.
+
+Setup (once per environment):
+1. Resend → Domains: add `reply.workhays.com` (or another subdomain), enable **Receiving**, add its MX record in Cloudflare.
+2. Resend → Webhooks: endpoint `https://<site>/api/inbound`, event `email.received`. Copy the signing secret.
+3. Env: `INBOUND_EMAIL_DOMAIN=reply.workhays.com`, `RESEND_WEBHOOK_SECRET=whsec_...`.
+
 ## Forms
 
 Forms that call a server action with `useActionState` use `<ActionForm>` (`components/ui/Form.tsx`), which keeps what people typed when the server returns an error. A plain `<form action>` is reset by React after every submit.
