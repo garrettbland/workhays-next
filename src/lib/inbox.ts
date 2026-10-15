@@ -28,6 +28,12 @@ export function parseAddress(value: string): { email: string; name: string | nul
   return { email: value.trim().toLowerCase(), name: null };
 }
 
+/** True if any recipient is on this site's inbound domain (dev and prod share one Resend account). */
+export function isForThisInbox(addresses: string[]): boolean {
+  const domain = inboundDomain();
+  return !!domain && addresses.some((a) => parseAddress(a).email.endsWith(`@${domain}`));
+}
+
 /** Finds the conversation token among the recipient addresses, if any. */
 export function findConversationToken(addresses: string[]): string | null {
   const domain = inboundDomain();

@@ -6,6 +6,7 @@ import {
   getReceivedEmail,
   htmlToText,
   isAutomated,
+  isForThisInbox,
   isPassThrough,
   parseAddress,
   sendConversationReply,
@@ -39,6 +40,9 @@ async function handleReceived(emailId: string) {
   if (count) return { duplicate: true };
 
   const email = await getReceivedEmail(emailId);
+  // Resend sends every received email to every webhook on the account. Only handle mail for
+  // this site's own inbox domain, so the dev site never answers production mail (or vice versa).
+  if (!isForThisInbox([...(email.to ?? []), ...(email.cc ?? []), ...(email.received_for ?? [])])) return { ignored: "other inbox" };
   const headers = email.headers ?? {};
   const from = parseAddress(headers.from ?? headers.From ?? email.from);
   const recipients = [...(email.to ?? []), ...(email.cc ?? []), ...(email.received_for ?? [])];
